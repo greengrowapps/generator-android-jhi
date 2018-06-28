@@ -1,0 +1,15 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion '27.0.3'
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 26
+    }
+
+}
+
+dependencies {
+    implementation 'com.greengrowapps:ggarest:0.16'
+}

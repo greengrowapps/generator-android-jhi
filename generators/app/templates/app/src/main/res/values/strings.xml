@@ -1,0 +1,54 @@
+<resources>
+    <string name="app_name"><%= appName %></string>
+
+    <!-- Strings related to facebook login -->
+    <string name="fb_login_protocol_scheme" translatable="false">fbXXXXXXXXXXXXXX</string>
+    <string name="facebook_app_id" translatable="false">fbXXXXXXXXXXXXXXXX</string>
+
+    <!-- Strings related to google login -->
+    <string name="default_web_client_id" translatable="false">XXXXXXXXXXXXXX.apps.googleusercontent.com</string>
+
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="action_login_with_facebook">Sign in with Facebook</string>
+    <string name="action_login_with_google">Sign in with Google</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="loginErrorMsg">Login error</string>
+    <string name="title_activity_register">Register</string>
+    <string name="action_sign_up">Sign up</string>
+    <string name="action_sign_up_short">Sign up</string>
+    <string name="error_password_not_match">Repeat password not match</string>
+    <string name="title_activity_new_counter">New Counter</string>
+    <string name="prompt_name">Name</string>
+    <string name="prompt_description">Description (Optional)</string>
+    <string name="prompt_number">Number (Optional)</string>
+    <string name="action_save">Save</string>
+    <string name="error_mandatory_field">Mandatory field</string>
+    <string name="title_activity_counter_detail">CounterDetailActivity</string>
+    <string name="account">Account</string>
+    <string name="logout">Logout</string>
+    <string name="title_activity_counters">CountersActivity</string>
+    <string name="counters">Counters</string>
+    <string name="error_getting_items">Error getting items</string>
+    <string name="field_name">Name:</string>
+    <string name="field_description">Description:</string>
+    <string name="field_number">Number</string>
+    <string name="field_model">Model:</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
+</resources>
