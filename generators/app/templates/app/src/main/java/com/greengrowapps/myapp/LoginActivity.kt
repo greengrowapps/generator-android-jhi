@@ -89,7 +89,7 @@ class LoginActivity: BaseActivity(), LoaderCallbacks<Cursor>, OnLoginListener {
     }
 
     private fun navigateToMainActivity(){
-        startActivity(Intent(this,CountersActivity::class.java))
+        startActivity(Intent(this,MainActivity::class.java))
 
         finish()
     }

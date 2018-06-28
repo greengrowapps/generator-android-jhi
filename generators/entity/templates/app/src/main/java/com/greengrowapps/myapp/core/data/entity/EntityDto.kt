@@ -1,10 +1,10 @@
-package <%= packageName %>.core.counters
+package <%= packageName %>.core.data.<%= entityNameLower %>
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties
 import java.io.Serializable
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-class CounterDto : Serializable {
+class <%= entityName %>Dto : Serializable {
 
     var id: Long? = null
 

@@ -5,15 +5,15 @@ import android.os.PersistableBundle
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import com.greengrowapps.jhiusers.JhiUsers
-import <%= packageName %>.core.MyCountersCore
+import <%= packageName %>.core.Core
 
 open class BaseActivity : AppCompatActivity(){
 
     fun getJhiUsers() : JhiUsers{
-        return ( application as MyCountersApplication).getJhiUsers()
+        return ( application as MyApplication).getJhiUsers()
     }
-    fun getCore() : MyCountersCore{
-        return ( application as MyCountersApplication).getCore()
+    fun getCore() : Core{
+        return ( application as MyApplication).getCore()
     }
 
     override fun onContextItemSelected(item: MenuItem?): Boolean {

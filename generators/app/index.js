@@ -43,7 +43,7 @@ module.exports = class extends Generator {
 
   writing() {
     const packageDir = this.props.packageName.replace(/\./g, '/');
-    const oldPackageDir = 'com/greengrowapps/mycountersapp';
+    const oldPackageDir = 'com/greengrowapps/myapp';
 
     /**
      * The files to copy

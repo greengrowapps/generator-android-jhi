@@ -6,14 +6,14 @@ import com.greengrowapps.ggarest.GgaRest
 import com.greengrowapps.jhiusers.JhiUsers
 import com.greengrowapps.jhiusers.JhiUsersImpl
 import <%= packageName %>.core.CustomSerializer
-import <%= packageName %>.core.MyCountersCore
+import <%= packageName %>.core.Core
 import <%= packageName %>.core.config.CoreConfiguration
 
-class MyCountersApplication : Application() {
+class MyApplication : Application() {
 
     private lateinit var jhiUsers: JhiUsers
 
-    private lateinit var core: MyCountersCore
+    private lateinit var core: Core
 
     private lateinit var config: CoreConfiguration
 
@@ -31,14 +31,14 @@ class MyCountersApplication : Application() {
         }
 
         jhiUsers = JhiUsersImpl.with(this,config.serverUrl,true,getSharedPreferences("JhiUsers", Context.MODE_PRIVATE))
-        core = MyCountersCore(jhiUsers,config,getSharedPreferences("MyCountersCore", Context.MODE_PRIVATE),CustomSerializer())
+        core = Core(jhiUsers,config,getSharedPreferences("Core", Context.MODE_PRIVATE),CustomSerializer())
     }
 
     fun getJhiUsers() : JhiUsers{
         return jhiUsers
     }
 
-    fun getCore() : MyCountersCore{
+    fun getCore() : Core{
         return core
     }
 }

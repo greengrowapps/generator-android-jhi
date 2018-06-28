@@ -6,26 +6,26 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.widget.LinearLayoutManager
 import android.widget.Toast
-import <%= packageName %>.core.counters.CounterDto
-import <%= packageName %>.viewadapters.CounterViewAdapter
+import <%= packageName %>.core.data.<%= entityNameLower %>.<%= entityName %>Dto
+import <%= packageName %>.viewadapters.<%= entityName %>ViewAdapter
 
-import kotlinx.android.synthetic.main.activity_counters.*
-import kotlinx.android.synthetic.main.content_counters.*
+import kotlinx.android.synthetic.main.activity_<%= entityNameLower %>.*
+import kotlinx.android.synthetic.main.content_<%= entityNameLower %>.*
 
-class CountersActivity : BaseActivity() {
+class <%= entityName %>Activity : BaseActivity() {
 
     companion object {
         fun openIntent(from: Context) : Intent{
-            return Intent(from,CountersActivity::class.java)
+            return Intent(from,<%= entityName %>Activity::class.java)
         }
     }
 
-    private val items = ArrayList<CounterDto>()
-    private lateinit var viewAdapter: CounterViewAdapter
+    private val items = ArrayList<<%= entityName %>Dto>()
+    private lateinit var viewAdapter: <%= entityName %>ViewAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_counters)
+        setContentView(R.layout.activity_<%= entityNameLower %>)
         setSupportActionBar(toolbar)
 
         fab.setOnClickListener { view ->
@@ -35,7 +35,7 @@ class CountersActivity : BaseActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val viewManager = LinearLayoutManager(this)
-        viewAdapter = CounterViewAdapter(items)
+        viewAdapter = <%= entityName %>ViewAdapter(items)
 
         recyclerView.apply {
             setHasFixedSize(true)
@@ -54,11 +54,11 @@ class CountersActivity : BaseActivity() {
     private fun refreshList() {
         swiperefresh.isRefreshing = true
         populateItems(
-                getCore().CounterService()
+                getCore().<%= entityNameLower %>Service()
                         .readList(
                                 true,
-                                {list -> populateItems(list); dismissLoadingIndicator() },
-                                { statusCode, response -> showError(); dismissLoadingIndicator() }
+                                {list: List<<%= entityName %>Dto> -> populateItems(list); dismissLoadingIndicator() },
+                                { statusCode: Int, response: String -> showError(); dismissLoadingIndicator() }
                         ))
     }
 
@@ -70,7 +70,7 @@ class CountersActivity : BaseActivity() {
         Toast.makeText(this, getString(R.string.error_getting_items), Toast.LENGTH_SHORT).show()
     }
 
-    private fun populateItems(list: List<CounterDto>) {
+    private fun populateItems(list: List<<%= entityName %>Dto>) {
         items.clear()
         items.addAll(list)
         viewAdapter.notifyDataSetChanged()

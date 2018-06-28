@@ -70,9 +70,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             R.id.nav_logout -> {
                 startActivity(LoginActivity.clearTopIntent(this))
             }
-            R.id.nav_counters -> {
-                startActivity(CountersActivity.openIntent(this))
-            }
+//options-needle
         }
 
         drawer_layout.closeDrawer(GravityCompat.START)

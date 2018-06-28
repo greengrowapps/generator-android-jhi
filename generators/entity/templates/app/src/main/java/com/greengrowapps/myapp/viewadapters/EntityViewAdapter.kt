@@ -6,17 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import <%= packageName %>.R
-import <%= packageName %>.core.counters.CounterDto
+import <%= packageName %>.core.data.<%= entityNameLower %>.<%= entityName %>Dto
 
-class CounterViewAdapter(private val myDataset: List<CounterDto>) :
-        RecyclerView.Adapter<CounterViewAdapter.ViewHolder>() {
+class <%= entityName %>ViewAdapter(private val myDataset: List<<%= entityName %>Dto>) :
+        RecyclerView.Adapter<<%= entityName %>ViewAdapter.ViewHolder>() {
 
     class ViewHolder(parent: View, val nameTextView: TextView, val descriptionTextView: TextView, val numberTextView: TextView, val modelTextView: TextView) : RecyclerView.ViewHolder(parent)
 
     override fun onCreateViewHolder(parent: ViewGroup,
-                                    viewType: Int): CounterViewAdapter.ViewHolder {
+                                    viewType: Int): <%= entityName %>ViewAdapter.ViewHolder {
         val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.view_counter_item, parent, false) as View
+                .inflate(R.layout.view_<%= entityNameLower %>_item, parent, false) as View
 
         return ViewHolder(view,view.findViewById(R.id.tv_name),view.findViewById(R.id.tv_description),view.findViewById(R.id.tv_number),view.findViewById(R.id.tv_model))
     }
