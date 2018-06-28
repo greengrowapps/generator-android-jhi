@@ -9,7 +9,7 @@ import com.greengrowapps.jhiusers.JhiUsers
 class <%= entityName %>RestResource(private val url:String, private val webservice: Webservice, private val users: JhiUsers){
 
     companion object {
-        const val resourceUrl = "api/<%= entityNameLower %>s"
+        const val resourceUrl = "api/<%= entityNameLower.replace(/_/g,'-') %>s"
     }
 
     fun readList(success: (List<<%= entityName %>Dto>) -> Unit, error: (statusCode:Int, response:String) -> Unit){

@@ -4,36 +4,30 @@ const chalk = require('chalk');
 const yosay = require('yosay');
 
 module.exports = class extends Generator {
+  constructor(args, opts) {
+    super(args, opts);
+
+    this.argument('name', { type: String, required: true });
+  }
+
   prompting() {
     // Have Yeoman greet the user.
     this.log(yosay(`Welcome to the primo ${chalk.red('android-jhi')} generator!`));
 
-    const prompts = [
-      {
-        type: 'input',
-        name: 'packageName',
-        message: 'Type the app Package name',
-        default: 'com.company.app'
-      },
-      {
-        type: 'input',
-        name: 'entityName',
-        message: 'Type the entity name',
-        default: 'entity'
-      }
-    ];
+    const prompts = [];
 
-    return this.prompt(prompts).then(props => {
-      // To access props later use this.props.someAnswer;
-      props.entityName =
-        props.entityName.substr(0, 1).toUpperCase() +
-        props.entityName.toLowerCase().substr(1);
-      props.entityNameLower = props.entityName.toLowerCase();
-      this.props = props;
-    });
+    return this.prompt(prompts);
   }
 
   writing() {
+    let entityName = this.options.name;
+
+    this.props = this.props ? this.props : {};
+    this.props.entityName = entityName.substr(0, 1).toUpperCase() + entityName.substr(1);
+    this.props.entityNameLower = entityName.substr(0, 1).toLowerCase() + entityName.substr(1).replace(/(?:^|\.?)([A-Z])/g, function (x,y){return "_" + y.toLowerCase()}).replace(/^_/, "");
+
+    this.props.packageName = this.config.get('packageName');
+
     const packageDir = this.props.packageName.replace(/\./g, '/');
     const oldPackageDir = 'com/greengrowapps/myapp';
 

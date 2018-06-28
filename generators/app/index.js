@@ -106,6 +106,11 @@ module.exports = class extends Generator {
         this.props
       );
     });
+
+    this.config.set('packageName', this.props.packageName);
+    this.config.set('appName', this.props.appName);
+
+    this.config.save();
   }
 
   install() {
