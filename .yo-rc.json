@@ -1,0 +1,9 @@
+{
+  "generator-node": {
+    "promptValues": {
+      "authorName": "Green grow apps",
+      "authorEmail": "greengrowapps@gmail.com",
+      "authorUrl": "https://www.greengrowapps.com"
+    }
+  }
+}
