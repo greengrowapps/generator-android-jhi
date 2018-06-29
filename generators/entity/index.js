@@ -65,7 +65,37 @@ module.exports = class extends Generator {
 
     let entityConfig = JSON.parse(this.fs.read('.jhipster/'+this.props.entityName +'.json'));
 
-    this.props.fields = entityConfig.fields;
+    this.props.fields = [];
+
+    for (let field of entityConfig.fields){
+
+      switch (field.fieldType){
+        case 'Integer':
+          this.props.fields.push(field);
+          break;
+        case 'Long':
+          this.props.fields.push(field);
+          break;
+        case 'Float':
+          this.props.fields.push(field);
+          break;
+        case 'Double':
+          this.props.fields.push(field);
+          break;
+        case 'String':
+          this.props.fields.push(field);
+          break;
+        case 'Boolean':
+          this.props.fields.push(field);
+          break;
+        case 'ZonedDateTime':
+          this.props.fields.push({ fieldName: field.fieldName, fieldType: 'Date'});
+          break;
+        default:
+          this.log(`Unknown type ${field.fieldType} in entity ${entityName}`);
+          break;
+      }
+    }
 
     const packageDir = this.props.packageName.replace(/\./g, '/');
     const oldPackageDir = 'com/greengrowapps/myapp';
@@ -180,7 +210,7 @@ module.exports = class extends Generator {
       `<item\n` +
       `android:id="@+id/nav_${this.props.entityNameLower}"\n` +
       `android:icon="@drawable/ic_menu_camera"\n` +
-      `android:title="@string/${this.props.entityNameLower}"\n` +
+      `android:title="@string/entity_${this.props.entityNameLower}"\n` +
       '/>' +
       '<!--<menu-needle-->\n';
 
@@ -198,13 +228,13 @@ module.exports = class extends Generator {
     /* Add string resources */
 
     let stringValue =
-      `    <string name="${this.props.entityNameLower}">${this.props.entityName}</string>\n` +
+      `    <string name="entity_${this.props.entityNameLower}">${this.props.entityName}</string>\n` +
       `    <string name="title_activity_${this.props.entityNameLower}">${
         this.props.entityName
       }</string>\n`;
 
       for(let i = 0; i<this.props.fields.length ; i++){
-        stringValue += `    <string name="field_${this.props.fields[i].fieldName}">${this.props.fields[i].fieldName}</string>\n`;
+        stringValue += `    <string name="field_${this.props.entityNameLower}_${this.props.fields[i].fieldName}">${this.props.fields[i].fieldName}</string>\n`;
       }
 
       stringValue += '    <!--strings-needle-->\n';

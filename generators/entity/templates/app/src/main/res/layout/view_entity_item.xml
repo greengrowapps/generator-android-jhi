@@ -25,7 +25,7 @@
               style="@style/TextAppearance.AppCompat.Medium"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:text="@string/field_<%=field.fieldName%>"
+              android:text="@string/field_<%=entityNameLower%>_<%=field.fieldName%>"
               android:textStyle="bold"
               android:paddingRight="4dp"/>
             <TextView

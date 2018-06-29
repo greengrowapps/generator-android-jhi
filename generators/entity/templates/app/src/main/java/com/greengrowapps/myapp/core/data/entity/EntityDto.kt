@@ -2,6 +2,7 @@ package <%= packageName %>.core.data.<%= entityNameLower %>
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties
 import java.io.Serializable
+import java.util.Date
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 class <%= entityName %>Dto : Serializable {
