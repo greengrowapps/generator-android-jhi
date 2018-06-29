@@ -41,10 +41,6 @@
     <string name="account">Account</string>
     <string name="logout">Logout</string>
     <string name="error_getting_items">Error getting items</string>
-    <string name="field_name">Name:</string>
-    <string name="field_description">Description:</string>
-    <string name="field_number">Number</string>
-    <string name="field_model">Model:</string>
     <string name="delete">Delete</string>
     <string name="edit">Edit</string>
     <!--strings-needle-->

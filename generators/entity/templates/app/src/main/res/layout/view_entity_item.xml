@@ -15,81 +15,26 @@
             android:orientation="vertical"
             android:padding="8dp">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="left"
-                android:orientation="horizontal">
-                <TextView
-                    style="@style/TextAppearance.AppCompat.Medium"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/field_name"
-                    android:textStyle="bold"
-                    android:paddingRight="4dp"/>
-                <TextView
-                    android:id="@+id/tv_name"
-                    style="@style/TextAppearance.AppCompat.Medium"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="left"
-                android:orientation="horizontal">
-                <TextView
-                    style="@style/TextAppearance.AppCompat.Medium"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/field_description"
-                    android:textStyle="bold"
-                    android:paddingRight="4dp"/>
-                <TextView
-                    android:id="@+id/tv_description"
-                    style="@style/TextAppearance.AppCompat.Medium"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="left"
-                android:orientation="horizontal">
-                <TextView
-                    style="@style/TextAppearance.AppCompat.Medium"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/field_number"
-                    android:textStyle="bold"
-                    android:paddingRight="4dp"/>
-                <TextView
-                    android:id="@+id/tv_number"
-                    style="@style/TextAppearance.AppCompat.Medium"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="left"
-                android:orientation="horizontal">
-                <TextView
-                    style="@style/TextAppearance.AppCompat.Medium"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/field_model"
-                    android:textStyle="bold"
-                    android:paddingRight="4dp"/>
-                <TextView
-                    android:id="@+id/tv_model"
-                    style="@style/TextAppearance.AppCompat.Medium"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
+          <% fields.forEach(function(field){ %>
+          <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:orientation="horizontal">
+            <TextView
+              style="@style/TextAppearance.AppCompat.Medium"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="@string/field_<%=field.fieldName%>"
+              android:textStyle="bold"
+              android:paddingRight="4dp"/>
+            <TextView
+              android:id="@+id/tv_<%=field.fieldName%>"
+              style="@style/TextAppearance.AppCompat.Medium"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content" />
+          </LinearLayout>
+          <% }); %>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

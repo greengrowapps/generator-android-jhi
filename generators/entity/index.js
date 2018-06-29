@@ -2,31 +2,70 @@
 const Generator = require('yeoman-generator');
 const chalk = require('chalk');
 const yosay = require('yosay');
+const shelljs = require('shelljs');
+const path = require('path');
 
 module.exports = class extends Generator {
   constructor(args, opts) {
     super(args, opts);
-
-    this.argument('name', { type: String, required: true });
   }
 
   prompting() {
     // Have Yeoman greet the user.
     this.log(yosay(`Welcome to the primo ${chalk.red('android-jhi')} generator!`));
 
-    const prompts = [];
+    let entities = [];
+    let foo = [];
 
-    return this.prompt(prompts);
+    shelljs.ls(path.join('.jhipster', '*.json')).reduce((acc, file) => {
+      let entityName = file.replace(/.jhipster\//, '').replace(/.json/, '');
+      entities.push(entityName);
+      return acc;
+    }, foo);
+
+    var prompts = [
+        {
+          type: 'checkbox',
+          name: 'entities',
+          message: 'Wich entities should be scaffolded?',
+          choices: []
+        }
+      ];
+
+
+    for (let name of entities){
+      prompts[0].choices.push({
+        name: name,
+        value: name,
+        checked: true
+      });
+    }
+
+    return this.prompt(prompts).then(props => {
+      // To access props later use this.props.someAnswer;
+      this.props = props;
+    });
   }
 
   writing() {
-    let entityName = this.options.name;
+    for (let name of this.props.entities) {
+      this._writeEntity(name);
+    }
+  }
+
+  _writeEntity(entityName) {
+
+    this.log(`Generating entity ${entityName}`);
 
     this.props = this.props ? this.props : {};
     this.props.entityName = entityName.substr(0, 1).toUpperCase() + entityName.substr(1);
     this.props.entityNameLower = entityName.substr(0, 1).toLowerCase() + entityName.substr(1).replace(/(?:^|\.?)([A-Z])/g, function (x,y){return "_" + y.toLowerCase()}).replace(/^_/, "");
 
     this.props.packageName = this.config.get('packageName');
+
+    let entityConfig = JSON.parse(this.fs.read('.jhipster/'+this.props.entityName +'.json'));
+
+    this.props.fields = entityConfig.fields;
 
     const packageDir = this.props.packageName.replace(/\./g, '/');
     const oldPackageDir = 'com/greengrowapps/myapp';
@@ -158,12 +197,17 @@ module.exports = class extends Generator {
 
     /* Add string resources */
 
-    const stringValue =
+    let stringValue =
       `    <string name="${this.props.entityNameLower}">${this.props.entityName}</string>\n` +
       `    <string name="title_activity_${this.props.entityNameLower}">${
         this.props.entityName
-      }</string>\n` +
-      '    <!--strings-needle-->\n';
+      }</string>\n`;
+
+      for(let i = 0; i<this.props.fields.length ; i++){
+        stringValue += `    <string name="field_${this.props.fields[i].fieldName}">${this.props.fields[i].fieldName}</string>\n`;
+      }
+
+      stringValue += '    <!--strings-needle-->\n';
 
     this.fs.copy(
       `app/src/main/res/values/strings.xml`,
