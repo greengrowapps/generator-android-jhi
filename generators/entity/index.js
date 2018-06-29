@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 'use strict';
 const Generator = require('yeoman-generator');
 const chalk = require('chalk');
@@ -23,15 +24,12 @@ module.exports = class extends Generator {
       return acc;
     }, foo);
 
-    var prompts = [
-        {
+    var prompts = [{
           type: 'checkbox',
           name: 'entities',
           message: 'Wich entities should be scaffolded?',
           choices: []
-        }
-      ];
-
+        }];
 
     for (let name of entities){
       prompts[0].choices.push({
@@ -56,13 +54,16 @@ module.exports = class extends Generator {
   _capitalize(text){
     return text.substr(0, 1).toUpperCase() + text.substr(1);
   }
+  _camelToSnake(text){
+    return text.substr(0, 1).toLowerCase() + text.substr(1).replace(/(?:^|\.?)([A-Z])/g, function (x,y){return "_" + y.toLowerCase()}).replace(/^_/, "");
+  }
   _writeEntity(entityName) {
 
     this.log(`Generating entity ${entityName}`);
 
     this.props = this.props ? this.props : {};
     this.props.entityName = this._capitalize(entityName);
-    this.props.entityNameLower = entityName.substr(0, 1).toLowerCase() + entityName.substr(1).replace(/(?:^|\.?)([A-Z])/g, function (x,y){return "_" + y.toLowerCase()}).replace(/^_/, "");
+    this.props.entityNameLower = this._camelToSnake(entityName);
 
     this.props.packageName = this.config.get('packageName');
 
@@ -93,8 +94,12 @@ module.exports = class extends Generator {
         case 'ZonedDateTime':
           this.props.fields.push({ fieldName: field.fieldName, fieldType: 'Date'});
           break;
+        case 'byte[]':
+          // TODO images
+          break;
         default:
-          this.log(`Unknown type ${field.fieldType} in entity ${entityName}`);
+          this._scaffoldEnum(field.fieldType);
+          this.props.fields.push({ fieldName: field.fieldName, fieldType: field.fieldType, isEnum: true});
           break;
       }
     }
@@ -251,28 +256,16 @@ module.exports = class extends Generator {
 
     /* Add string resources */
 
-    let stringValue =
-      `    <string name="entity_${this.props.entityNameLower}">${this.props.entityName}</string>\n` +
-      `    <string name="title_activity_${this.props.entityNameLower}">${
-        this.props.entityName
-      }</string>\n`;
+    let toAppend = [
+      [`entity_${this.props.entityNameLower}`,`${this.props.entityName}`],
+      [`title_activity_${this.props.entityNameLower}`,`${this.props.entityName}`],
+    ];
 
-      for(let i = 0; i<this.props.fields.length ; i++){
-        stringValue += `    <string name="field_${this.props.entityNameLower}_${this.props.fields[i].fieldName}">${this.props.fields[i].fieldName}</string>\n`;
-      }
+    for(let i = 0; i<this.props.fields.length ; i++){
+      toAppend.push([`field_${this.props.entityNameLower}_${this.props.fields[i].fieldName}`, `${this.props.fields[i].fieldName}`]);
+    }
 
-      stringValue += '    <!--strings-needle-->\n';
-
-    this.fs.copy(
-      `app/src/main/res/values/strings.xml`,
-      `app/src/main/res/values/strings.xml`,
-      {
-        process: function(content) {
-          let regEx = new RegExp('<!--strings-needle-->', 'g');
-          return content.toString().replace(regEx, stringValue);
-        }
-      }
-    );
+    this._appendStrings(toAppend);
 
     /* Add activity in manifest */
 
@@ -295,6 +288,76 @@ module.exports = class extends Generator {
         return content.toString().replace(regEx, manifestActivity);
       }
     });
+  }
+
+  _scaffoldEnum(enumName){
+
+    let enumNameSnake = this._camelToSnake(enumName);
+
+    const packageDir = this.props.packageName.replace(/\./g, '/');
+    const oldPackageDir = 'com/greengrowapps/myapp';
+
+    const templateFiles = [
+      [
+        `app/src/main/java/${oldPackageDir}/core/data/enum/EnumType.kt`,
+        `app/src/main/java/${packageDir}/core/data/enum/${enumName}.kt`
+      ]
+    ];
+    this.props.enumName = enumName;
+    this.props.enumValues = ['VAL1', 'VAL2'];
+
+    templateFiles.forEach(([src, dest = src]) => {
+      this.fs.copyTpl(`${this.sourceRoot()}/${src}`, `${dest}`, this.props);
+    });
+
+    let fun = `         fun localize${enumName}(item: ${enumName}?, with: Context) : String {\n`+
+              `            return when(item){\n`;
+
+    let toAppend = [];
+    for (let value of this.props.enumValues){
+      toAppend.push( [`${enumNameSnake}_${value.toLowerCase()}`,`${value}`] );
+      fun += `${enumName}.${value} -> with.getString(R.string.${enumNameSnake}_${value.toLowerCase()})\n`;
+    }
+
+    fun+= `                else -> {\n`+
+          `                    ""\n`+
+          `                }\n`+
+          `            }\n`+
+          `        }\n`+
+          '        //functions-needle\n';
+
+    this.fs.copy(
+      `app/src/main/java/${packageDir}/core/l18n/EnumLocalization.kt`,
+      `app/src/main/java/${packageDir}/core/l18n/EnumLocalization.kt`,
+      {
+        process: function(content) {
+          let regEx = new RegExp('//functions-needle', 'g');
+          return content.toString().replace(regEx, fun);
+        }
+      }
+    );
+
+    this._appendStrings(toAppend);
+  }
+
+  _appendStrings(strings){
+    let stringValue = '';
+
+    for (let str of strings){
+      stringValue+=`    <string name="${str[0]}">${str[1]}</string>\n`
+    }
+    stringValue += '    <!--strings-needle-->\n';
+
+    this.fs.copy(
+      `app/src/main/res/values/strings.xml`,
+      `app/src/main/res/values/strings.xml`,
+      {
+        process: function(content) {
+          let regEx = new RegExp('<!--strings-needle-->', 'g');
+          return content.toString().replace(regEx, stringValue);
+        }
+      }
+    );
   }
 
   install() {

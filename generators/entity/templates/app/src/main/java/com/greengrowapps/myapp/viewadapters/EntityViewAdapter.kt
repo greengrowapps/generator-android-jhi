@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.text.format.DateFormat
+import com.company.app.core.l18n.EnumLocalization
+import <%= packageName %>.core.data.enum.*
 import <%= packageName %>.R
 import <%= packageName %>.core.data.<%= entityNameLower %>.<%= entityName %>Dto
 
@@ -40,9 +42,11 @@ class <%= entityName %>ViewAdapter(private val myDataset: List<<%= entityName %>
           case 'Date':%>
           item.<%=field.fieldName%>?.let { holder.<%=field.fieldName%>TextView.text = "${DateFormat.getDateFormat(holder.parent.context).format(item.<%=field.fieldName%>)} ${DateFormat.getTimeFormat(holder.parent.context).format(item.<%=field.fieldName%>)}" }
           <%break;
-          default:%>
+          default: if(field.isEnum){%>
+          holder.<%=field.fieldName%>TextView.text = EnumLocalization.localize<%=field.fieldType.substring(0,1).toUpperCase() %><%=field.fieldType.substring(1) %>(item.<%=field.fieldName%>,holder.parent.context)
+          <% } else { %>
           holder.<%=field.fieldName%>TextView.text = item.<%=field.fieldName%>?.toString()?:""
-          <%break;
+          <% } break;
         }%>
         <% }); %>
     }
