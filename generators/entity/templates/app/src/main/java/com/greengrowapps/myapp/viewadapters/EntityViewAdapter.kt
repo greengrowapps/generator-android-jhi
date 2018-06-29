@@ -11,10 +11,10 @@ import <%= packageName %>.core.data.enum.*
 import <%= packageName %>.R
 import <%= packageName %>.core.data.<%= entityNameLower %>.<%= entityName %>Dto
 
-class <%= entityName %>ViewAdapter(private val myDataset: List<<%= entityName %>Dto>) :
+class <%= entityName %>ViewAdapter(private val myDataset: List<<%= entityName %>Dto>, private val editListener: (<%= entityName %>Dto)->Unit, private val deleteListener: (<%= entityName %>Dto)->Unit) :
         RecyclerView.Adapter<<%= entityName %>ViewAdapter.ViewHolder>() {
 
-    class ViewHolder(val parent: View
+    class ViewHolder(val parent: View, val editButton: View, val deleteButton: View
                       <% fields.forEach(function(field){ %>
                       ,val <%=field.fieldName%>TextView: TextView
                       <% }); %>
@@ -25,7 +25,7 @@ class <%= entityName %>ViewAdapter(private val myDataset: List<<%= entityName %>
         val view = LayoutInflater.from(parent.context)
                 .inflate(R.layout.view_<%= entityNameLower %>_item, parent, false) as View
 
-        return ViewHolder(view
+        return ViewHolder(view,view.findViewById(R.id.edit_button),view.findViewById(R.id.delete_button)
           <% fields.forEach(function(field){ %>
           , view.findViewById(R.id.tv_<%=field.fieldName%>)
           <% }); %>
@@ -34,6 +34,9 @@ class <%= entityName %>ViewAdapter(private val myDataset: List<<%= entityName %>
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = myDataset[position]
+        holder.editButton.setOnClickListener{view -> editListener(item) }
+        holder.deleteButton.setOnClickListener{view -> deleteListener(item) }
+
         <% fields.forEach(function(field){ %>
         <%switch (field.fieldType) {
           case 'String':%>

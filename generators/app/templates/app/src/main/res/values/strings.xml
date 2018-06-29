@@ -37,6 +37,7 @@
     <string name="prompt_description">Description (Optional)</string>
     <string name="prompt_number">Number (Optional)</string>
     <string name="action_save">Save</string>
+    <string name="save_error">Save</string>
     <string name="error_mandatory_field">Mandatory field</string>
     <string name="account">Account</string>
     <string name="logout">Logout</string>

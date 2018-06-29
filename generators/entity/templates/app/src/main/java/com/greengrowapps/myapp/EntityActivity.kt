@@ -29,13 +29,12 @@ class <%= entityName %>Activity : BaseActivity() {
         setSupportActionBar(toolbar)
 
         fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
+          startActivity(<%= entityName %>DetailActivity.newIntent(this))
         }
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val viewManager = LinearLayoutManager(this)
-        viewAdapter = <%= entityName %>ViewAdapter(items)
+        viewAdapter = <%= entityName %>ViewAdapter(items, {item -> editItem(item) }, {item -> deleteItem(item) })
 
         recyclerView.apply {
             setHasFixedSize(true)
@@ -44,6 +43,14 @@ class <%= entityName %>Activity : BaseActivity() {
         }
 
         swiperefresh.setOnRefreshListener { refreshList() }
+    }
+
+    private fun deleteItem(item: <%= entityName %>Dto) {
+
+    }
+
+    private fun editItem(item: <%= entityName %>Dto) {
+      startActivity(<%= entityName %>DetailActivity.editIntent(this,item))
     }
 
     override fun onResume() {

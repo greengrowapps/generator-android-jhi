@@ -21,4 +21,10 @@ class <%= entityName %>Service(private val resource: <%= entityName %>RestResour
         }
         return ArrayList()
     }
+    fun create(item: <%= entityName %>Dto, success: (<%= entityName %>Dto) -> Unit, error: (statusCode: Int, response: String) -> Unit){
+      resource.save(item,success,error)
+    }
+    fun update(item: <%= entityName %>Dto, success: (<%= entityName %>Dto) -> Unit, error: (statusCode: Int, response: String) -> Unit){
+      resource.update(item,success,error)
+    }
 }

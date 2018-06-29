@@ -74,7 +74,7 @@ module.exports = class extends Generator {
     for (let field of entityConfig.fields) {
       switch (field.fieldType) {
         case 'Integer':
-          this.props.fields.push(field);
+          this.props.fields.push({ fieldName: field.fieldName, fieldType: 'Int'});
           break;
         case 'Long':
           this.props.fields.push(field);
@@ -160,8 +160,16 @@ module.exports = class extends Generator {
         `app/src/main/java/${packageDir}/${this.props.entityName}Activity.kt`
       ],
       [
+        `app/src/main/java/${oldPackageDir}/EntityDetailActivity.kt`,
+        `app/src/main/java/${packageDir}/${this.props.entityName}DetailActivity.kt`
+      ],
+      [
         `app/src/main/res/layout/activity_entity.xml`,
         `app/src/main/res/layout/activity_${this.props.entityNameLower}.xml`
+      ],
+      [
+        `app/src/main/res/layout/activity_entity_detail.xml`,
+        `app/src/main/res/layout/activity_${this.props.entityNameLower}_detail.xml`
       ],
       [
         `app/src/main/res/layout/content_entity.xml`,
@@ -259,10 +267,13 @@ module.exports = class extends Generator {
     let toAppend = [
       [`entity_${this.props.entityNameLower}`,`${this.props.entityName}`],
       [`title_activity_${this.props.entityNameLower}`,`${this.props.entityName}`],
+      [`title_activity_${this.props.entityNameLower}_detail`,`${this.props.entityName}`],
     ];
 
     for(let i = 0; i<this.props.fields.length ; i++){
       toAppend.push([`field_${this.props.entityNameLower}_${this.props.fields[i].fieldName}`, `${this.props.fields[i].fieldName}`]);
+      toAppend.push([`entity_${this.props.entityNameLower}_prompt_${this.props.fields[i].fieldName}`, `${this.props.fields[i].fieldName}`]);
+      toAppend.push([`error_${this.props.entityNameLower}_invalid_${this.props.fields[i].fieldName}`, `Invalid ${this.props.fields[i].fieldName}`]);
     }
 
     this._appendStrings(toAppend);
@@ -276,6 +287,15 @@ module.exports = class extends Generator {
         this.props.entityNameLower
       }"\n` +
       '            android:theme="@style/AppTheme.NoActionBar">\n' +
+      '            <meta-data\n' +
+      '                android:name="android.support.PARENT_ACTIVITY"\n' +
+      `                android:value="${this.props.packageName}.BaseActivity" />\n` +
+      '        </activity>\n' +
+      '    <activity\n' +
+      `            android:name=".${this.props.entityName}DetailActivity"\n` +
+      `            android:label="@string/title_activity_${
+        this.props.entityNameLower
+        }_detail">\n` +
       '            <meta-data\n' +
       '                android:name="android.support.PARENT_ACTIVITY"\n' +
       `                android:value="${this.props.packageName}.BaseActivity" />\n` +

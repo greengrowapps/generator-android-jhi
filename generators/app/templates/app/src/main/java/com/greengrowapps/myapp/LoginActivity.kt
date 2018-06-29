@@ -226,6 +226,7 @@ class LoginActivity: BaseActivity(), LoaderCallbacks<Cursor>, OnLoginListener {
 
     override fun onLoginError(error: String?) {
         Toast.makeText(this,getString(R.string.loginErrorMsg),Toast.LENGTH_SHORT).show()
+        showProgress(false)
     }
 
     private fun isEmailValid(email: String): Boolean {
