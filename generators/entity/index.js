@@ -53,12 +53,15 @@ module.exports = class extends Generator {
     }
   }
 
+  _capitalize(text){
+    return text.substr(0, 1).toUpperCase() + text.substr(1);
+  }
   _writeEntity(entityName) {
 
     this.log(`Generating entity ${entityName}`);
 
     this.props = this.props ? this.props : {};
-    this.props.entityName = entityName.substr(0, 1).toUpperCase() + entityName.substr(1);
+    this.props.entityName = this._capitalize(entityName);
     this.props.entityNameLower = entityName.substr(0, 1).toLowerCase() + entityName.substr(1).replace(/(?:^|\.?)([A-Z])/g, function (x,y){return "_" + y.toLowerCase()}).replace(/^_/, "");
 
     this.props.packageName = this.config.get('packageName');
@@ -67,9 +70,8 @@ module.exports = class extends Generator {
 
     this.props.fields = [];
 
-    for (let field of entityConfig.fields){
-
-      switch (field.fieldType){
+    for (let field of entityConfig.fields) {
+      switch (field.fieldType) {
         case 'Integer':
           this.props.fields.push(field);
           break;
@@ -93,6 +95,28 @@ module.exports = class extends Generator {
           break;
         default:
           this.log(`Unknown type ${field.fieldType} in entity ${entityName}`);
+          break;
+      }
+    }
+
+    for (let relation of entityConfig.relationships) {
+      switch (relation.relationshipType) {
+        case 'many-to-one':
+          if(relation.otherEntityField === 'id') {
+            this.props.fields.push({
+                fieldName: relation.relationshipName + this._capitalize(relation.otherEntityField),
+                fieldType: 'Long'
+              });
+          } else {
+            this.props.fields.push({
+                fieldName: relation.relationshipName + 'Id',
+                fieldType: 'Long'
+              });
+            this.props.fields.push({
+                fieldName: relation.relationshipName + this._capitalize(relation.otherEntityField),
+                fieldType: 'String'
+              });
+          }
           break;
       }
     }

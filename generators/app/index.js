@@ -21,18 +21,18 @@ module.exports = class extends Generator {
         message: 'Type the app Package name',
         default: 'com.company.app'
       },
-      {
-        type: 'confirm',
-        name: 'googleLogin',
-        message: 'Do you want social login with Google?',
-        default: true
-      },
-      {
-        type: 'confirm',
-        name: 'facebookLogin',
-        message: 'Do you want social login with Facebook?',
-        default: true
-      }
+      // {
+      //   type: 'confirm',
+      //   name: 'googleLogin',
+      //   message: 'Do you want social login with Google?',
+      //   default: true
+      // },
+      // {
+      //   type: 'confirm',
+      //   name: 'facebookLogin',
+      //   message: 'Do you want social login with Facebook?',
+      //   default: true
+      // }
     ];
 
     return this.prompt(prompts).then(props => {

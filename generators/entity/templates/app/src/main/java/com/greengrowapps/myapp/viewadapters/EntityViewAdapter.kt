@@ -5,13 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.text.format.DateFormat
 import <%= packageName %>.R
 import <%= packageName %>.core.data.<%= entityNameLower %>.<%= entityName %>Dto
 
 class <%= entityName %>ViewAdapter(private val myDataset: List<<%= entityName %>Dto>) :
         RecyclerView.Adapter<<%= entityName %>ViewAdapter.ViewHolder>() {
 
-    class ViewHolder(parent: View
+    class ViewHolder(val parent: View
                       <% fields.forEach(function(field){ %>
                       ,val <%=field.fieldName%>TextView: TextView
                       <% }); %>
@@ -32,7 +33,17 @@ class <%= entityName %>ViewAdapter(private val myDataset: List<<%= entityName %>
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = myDataset[position]
         <% fields.forEach(function(field){ %>
-        holder.<%=field.fieldName%>TextView.text = item.<%=field.fieldName%>?.toString()?:""
+        <%switch (field.fieldType) {
+          case 'String':%>
+          holder.<%=field.fieldName%>TextView.text = item.<%=field.fieldName%>?:""
+          <%break;
+          case 'Date':%>
+          item.<%=field.fieldName%>?.let { holder.<%=field.fieldName%>TextView.text = "${DateFormat.getDateFormat(holder.parent.context).format(item.<%=field.fieldName%>)} ${DateFormat.getTimeFormat(holder.parent.context).format(item.<%=field.fieldName%>)}" }
+          <%break;
+          default:%>
+          holder.<%=field.fieldName%>TextView.text = item.<%=field.fieldName%>?.toString()?:""
+          <%break;
+        }%>
         <% }); %>
     }
 
