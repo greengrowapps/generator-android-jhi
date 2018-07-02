@@ -27,4 +27,7 @@ class <%= entityName %>Service(private val resource: <%= entityName %>RestResour
     fun update(item: <%= entityName %>Dto, success: (<%= entityName %>Dto) -> Unit, error: (statusCode: Int, response: String) -> Unit){
       resource.update(item,success,error)
     }
+    fun delete(id: Long?, success: () -> Unit, error: (statusCode: Int, response: String) -> Unit) {
+      resource.delete(id?:0, success, error)
+    }
 }

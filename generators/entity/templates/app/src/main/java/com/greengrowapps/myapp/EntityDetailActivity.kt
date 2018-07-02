@@ -51,6 +51,7 @@ class <%= entityName %>DetailActivity : BaseActivity() {
         if (intent.hasExtra(ITEM_EXTRA)){
             item = intent.extras.getSerializable(ITEM_EXTRA) as <%= entityName %>Dto
             isNew = false
+            populate(item)
         }
         else{
             isNew = true
@@ -135,7 +136,7 @@ class <%= entityName %>DetailActivity : BaseActivity() {
         var focusView: View? = null
 
         <% fields.forEach(function(field){ %>
-        if (is<%=field.fieldName.substring(0,1).toUpperCase()%><%=field.fieldName.substring(1)%>Valid(item.<%=field.fieldName%>)) {
+        if (!is<%=field.fieldName.substring(0,1).toUpperCase()%><%=field.fieldName.substring(1)%>Valid(item.<%=field.fieldName%>)) {
           input_<%=field.fieldName%>.error = getString(R.string.error_<%=entityNameLower%>_invalid_<%=field.fieldName%>)
           focusView = input_<%=field.fieldName%>
           cancel = true

@@ -1,5 +1,6 @@
 package <%= packageName %>
 
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -46,7 +47,21 @@ class <%= entityName %>Activity : BaseActivity() {
     }
 
     private fun deleteItem(item: <%= entityName %>Dto) {
+      AlertDialog.Builder(this)
+        .setMessage(R.string.sure_to_delete)
+        .setPositiveButton(R.string.delete) { dialogInterface, i ->
+          getCore().<%= entityNameLower %>Service().delete(item.id,{ deleteSuccess() }, { code,error -> deleteError(error)})
+        }
+        .setNegativeButton(R.string.cancel,null)
+        .show()
+    }
 
+    private fun deleteError(error: String) {
+      Toast.makeText(this,R.string.delete_error,Toast.LENGTH_SHORT).show()
+    }
+
+    private fun deleteSuccess() {
+      refreshList()
     }
 
     private fun editItem(item: <%= entityName %>Dto) {

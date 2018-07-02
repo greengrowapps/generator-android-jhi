@@ -36,7 +36,7 @@ class <%= entityName %>RestResource(private val url:String, private val webservi
                 .addHeader("Content-Type","application/json;charset=UTF-8")
                 .addHeader("Authorization", "Bearer ${users.authToken}")
                 .withBody(toSave)
-                .onSuccess(<%= entityName %>Dto::class.java, OnObjResponseListener{ code, item, fullResponse -> success(item) })
+                .onResponse(<%= entityName %>Dto::class.java, 201, OnObjResponseListener{ code, item, fullResponse -> success(item) })
                 .onOther(OnResponseListener{code, fullResponse, e -> error(code, fullResponse.toString()) })
                 .execute()
     }
@@ -50,12 +50,12 @@ class <%= entityName %>RestResource(private val url:String, private val webservi
                 .onOther(OnResponseListener{code, fullResponse, e -> error(code, fullResponse.toString()) })
                 .execute()
     }
-    fun delete(id: Int, success: (<%= entityName %>Dto) -> Unit, error: (statusCode:Int, response:String) -> Unit){
+    fun delete(id: Long, success: () -> Unit, error: (statusCode:Int, response:String) -> Unit){
 
         webservice.delete("$url/$resourceUrl/$id")
                 .addHeader("Content-Type","application/json;charset=UTF-8")
                 .addHeader("Authorization", "Bearer ${users.authToken}")
-                .onSuccess(<%= entityName %>Dto::class.java, OnObjResponseListener{ code, item, fullResponse -> success(item) })
+                .onSuccess({ code, fullResponse, e -> success() })
                 .onOther(OnResponseListener{code, fullResponse, e -> error(code, fullResponse.toString()) })
                 .execute()
     }
