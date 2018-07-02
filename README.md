@@ -1,5 +1,7 @@
 # generator-android-jhi [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url]
-> Scaffolds Android Kotlin-Based App that uses Jhipster Api
+> Scaffolds Android Kotlin-Based App that consumes an Api scaffolded with [JHipster](https://jhipster.tech) generator.
+
+Currently this generator is in experimental fase and works with Monolithic Application, and JWT authentication. To use the social login you have to modify a little bit your Api project
 
 ## Installation
 
@@ -15,6 +17,14 @@ Then generate your new project:
 ```bash
 yo android-jhi
 ```
+
+You can copy your .jhipster folder from the target Jhipster project and run:
+
+```bash
+yo android-jhi:entity
+```
+
+Then you can choose which entities do you want to consume with your mobile App. CRUD operations will be scaffolded 
 
 ## Getting To Know Yeoman
 
