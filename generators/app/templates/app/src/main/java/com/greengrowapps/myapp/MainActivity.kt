@@ -80,6 +80,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.nav_logout -> {
+                getJhiUsers().logout()
                 startActivity(LoginActivity.clearTopIntent(this))
             }
 //options-needle

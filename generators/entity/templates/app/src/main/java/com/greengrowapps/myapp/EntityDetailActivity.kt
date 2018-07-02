@@ -28,11 +28,10 @@ class <%= entityName %>DetailActivity : BaseActivity() {
     private var isNew: Boolean = false
 
     private val pendingDependencies = HashSet<String>()
-    <% fields.forEach(function(field){ if(!field.isDependency){return;} %>
+    <% fields.forEach(function(field){ if(field.isDependency){ %>
     private val <%= field.otherEntityNameLower %>List = ArrayList<<%= field.otherEntityName%>Dto>()
     private lateinit var <%= field.otherEntityNameLower %>Adapter : ArrayAdapter<<%= field.otherEntityName%>Dto>
-
-    <% }) %>
+    <% } }) %>
     companion object {
         private const val ITEM_EXTRA = "ItemExtra"
 
@@ -61,10 +60,12 @@ class <%= entityName %>DetailActivity : BaseActivity() {
         }
 
         save_button.setOnClickListener { attempSave() }
-        <% fields.forEach(function(field){ if(!field.isDependency){return;} %>
+        <% fields.forEach(function(field){ if(field.isDependency) {%>
         <%= field.otherEntityNameLower %>Adapter = ObjectConverterStringAdapter<<%= field.otherEntityName %>Dto>(this,<%= field.otherEntityNameLower %>List,{ item -> item.<%= field.titleProperty %>.toString()})
         spinner_<%= field.fieldName %>.adapter = <%= field.otherEntityNameLower %>Adapter
-        <% }) %>
+        <% } else if(field.isEnum) { %>
+        spinner_<%= field.fieldName %>.adapter = ObjectConverterStringAdapter<<%= field.fieldType %>>(this,<%= field.fieldType %>.values().toMutableList(),{ item -> EnumLocalization.localize<%= field.fieldType %>(item,this)})
+        <% } }) %>
 
         <% if(hasDependencies){%>
         loadDependencies()
@@ -117,7 +118,7 @@ class <%= entityName %>DetailActivity : BaseActivity() {
       item.<%=field.fieldName%>?.let {  input_<%=field.fieldName%>.setText( "${DateFormat.getDateFormat(this).format(item.<%=field.fieldName%>)} ${DateFormat.getTimeFormat(this).format(item.<%=field.fieldName%>)}" ) }
       <%break;
       default: if(field.isEnum){%>
-      input_<%=field.fieldName%>.setText( EnumLocalization.localize<%=field.fieldType.substring(0,1).toUpperCase() %><%=field.fieldType.substring(1) %>(item.<%=field.fieldName%>,this) )
+      spinner_<%=field.fieldName%>.setSelection( item.<%=field.fieldName%>?.ordinal?:0 )
       <% } else if(field.isDependency){ %>
       spinner_<%=field.fieldName%>.setSelection( <%= field.otherEntityNameLower %>List.indexOfFirst { it -> it.id==item.<%= field.fieldName %> } )
       <% } else { %>
@@ -174,7 +175,7 @@ class <%= entityName %>DetailActivity : BaseActivity() {
           item.<%=field.fieldName%> = parseDate(input_<%=field.fieldName%>.text.toString())
           <%break;
           default: if(field.isEnum){%>
-          item.<%=field.fieldName%> = <%=field.fieldType %>.valueOf(input_<%=field.fieldName%>.text.toString())
+          item.<%=field.fieldName%> = <%=field.fieldType%>.values()[spinner_<%=field.fieldName%>.selectedItemPosition ]
           <% } else {%>
           item.<%=field.fieldName%> = input_<%=field.fieldName%>.text.toString()
           <%} } %>
@@ -211,10 +212,12 @@ class <%= entityName %>DetailActivity : BaseActivity() {
 
     private fun onSaveError(response: String) {
         showProgress(false)
+        isSaving=false
         Toast.makeText(this,R.string.save_error,Toast.LENGTH_SHORT).show()
     }
 
     private fun onSaveSuccess(<%= entityName %>Dto: <%= entityName %>Dto) {
+        isSaving=false
         finish()
     }
     <% fields.forEach(function(field){ if(field.isDerived){return;} %>
