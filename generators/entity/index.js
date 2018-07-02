@@ -98,7 +98,7 @@ module.exports = class extends Generator {
           // TODO images
           break;
         default:
-          this._scaffoldEnum(field.fieldType);
+          this._scaffoldEnum(field.fieldType,field.fieldValues);
           this.props.fields.push({ fieldName: field.fieldName, fieldType: field.fieldType, isEnum: true});
           break;
       }
@@ -310,8 +310,12 @@ module.exports = class extends Generator {
     });
   }
 
-  _scaffoldEnum(enumName){
+  _scaffoldEnum(enumName,enumValues){
 
+    this.props.enumName = enumName;
+    this.props.enumValues = enumValues.split(',');
+
+    this.log(`Enum found ${enumName} vales: ${this.props.enumValues}`);
     let enumNameSnake = this._camelToSnake(enumName);
 
     const packageDir = this.props.packageName.replace(/\./g, '/');
@@ -323,8 +327,7 @@ module.exports = class extends Generator {
         `app/src/main/java/${packageDir}/core/data/enum/${enumName}.kt`
       ]
     ];
-    this.props.enumName = enumName;
-    this.props.enumValues = ['VAL1', 'VAL2'];
+
 
     templateFiles.forEach(([src, dest = src]) => {
       this.fs.copyTpl(`${this.sourceRoot()}/${src}`, `${dest}`, this.props);
