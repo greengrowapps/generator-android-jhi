@@ -9,20 +9,30 @@ import android.text.TextUtils
 import android.text.format.DateFormat
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.widget.ArrayAdapter
 import android.widget.TextView
 import android.widget.Toast
 import <%= packageName %>.core.data.<%= entityNameLower %>.<%= entityName %>Dto
 import kotlinx.android.synthetic.main.activity_<%= entityNameLower %>_detail.*
 import java.util.*
 import <%= packageName %>.core.data.enum.*
-import com.company.app.core.l18n.EnumLocalization
-
+import <%= packageName %>.core.l18n.EnumLocalization
+import <%= packageName %>.viewadapters.ObjectConverterStringAdapter
+<% fields.forEach(function(field){ if(!field.isDependency){return;} %>
+import <%= packageName %>.core.data.<%= field.otherEntityNameLower %>.<%= field.otherEntityName %>Dto
+  <% }) %>
 class <%= entityName %>DetailActivity : BaseActivity() {
 
     private var isSaving: Boolean = false
     private lateinit var item: <%= entityName %>Dto
     private var isNew: Boolean = false
 
+    private val pendingDependencies = HashSet<String>()
+    <% fields.forEach(function(field){ if(!field.isDependency){return;} %>
+    private val <%= field.otherEntityNameLower %>List = ArrayList<<%= field.otherEntityName%>Dto>()
+    private lateinit var <%= field.otherEntityNameLower %>Adapter : ArrayAdapter<<%= field.otherEntityName%>Dto>
+
+    <% }) %>
     companion object {
         private const val ITEM_EXTRA = "ItemExtra"
 
@@ -40,14 +50,6 @@ class <%= entityName %>DetailActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_<%= entityNameLower %>_detail)
 
-        input_<%= fields[fields.length-1].fieldName %>.setOnEditorActionListener(TextView.OnEditorActionListener { _, id, _ ->
-            if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
-                attempSave()
-                return@OnEditorActionListener true
-            }
-            false
-        })
-
         if (intent.hasExtra(ITEM_EXTRA)){
             item = intent.extras.getSerializable(ITEM_EXTRA) as <%= entityName %>Dto
             isNew = false
@@ -59,11 +61,54 @@ class <%= entityName %>DetailActivity : BaseActivity() {
         }
 
         save_button.setOnClickListener { attempSave() }
+        <% fields.forEach(function(field){ if(!field.isDependency){return;} %>
+        <%= field.otherEntityNameLower %>Adapter = ObjectConverterStringAdapter<<%= field.otherEntityName %>Dto>(this,<%= field.otherEntityNameLower %>List,{ item -> item.<%= field.titleProperty %>.toString()})
+        spinner_<%= field.fieldName %>.adapter = <%= field.otherEntityNameLower %>Adapter
+        <% }) %>
+
+        <% if(hasDependencies){%>
+        loadDependencies()
+        <% } %>
     }
+  <% if(hasDependencies){%>
+    private fun loadDependencies() {
+      pendingDependencies.clear()
+      showProgress(true)
+
+      <% fields.forEach(function(field){ if(!field.isDependency){return;} %>
+      pendingDependencies.add("<%= field.otherEntityName %>")
+      getCore().<%= field.otherEntityNameLower %>Service().readList(
+        false,
+        { items -> dependencyLoad(items,<%= field.otherEntityNameLower %>List,"<%= field.otherEntityName %>")},
+        {statusCode, response -> dependencyLoadError(response) })
+      <% }) %>
+    }
+
+    private fun dependencyLoadError(error: String) {
+      Toast.makeText(this,R.string.dependency_load_error,Toast.LENGTH_SHORT).show()
+      finish()
+    }
+
+    private fun <T> dependencyLoad(items: List<T>, target: ArrayList<T>, dependencyName: String) {
+      target.clear()
+      target.addAll(items)
+      pendingDependencies.remove(dependencyName)
+      checkDependencies()
+    }
+    private fun checkDependencies(){
+      if(pendingDependencies.isEmpty()){
+        save_button.setOnClickListener { attempSave() }
+        <% fields.forEach(function(field){ if(!field.isDependency){return;} %>
+          <%= field.otherEntityNameLower %>Adapter.notifyDataSetChanged()
+          <% }) %>
+        showProgress(false)
+      }
+    }
+    <%}%>
 
     private fun populate(item: <%= entityName %>Dto) {
 
-    <% fields.forEach(function(field){ %>
+    <% fields.forEach(function(field){ if(field.isDerived){return;} %>
     <%switch (field.fieldType) {
       case 'String':%>
       input_<%=field.fieldName%>.setText(item.<%=field.fieldName%>?:"")
@@ -73,6 +118,8 @@ class <%= entityName %>DetailActivity : BaseActivity() {
       <%break;
       default: if(field.isEnum){%>
       input_<%=field.fieldName%>.setText( EnumLocalization.localize<%=field.fieldType.substring(0,1).toUpperCase() %><%=field.fieldType.substring(1) %>(item.<%=field.fieldName%>,this) )
+      <% } else if(field.isDependency){ %>
+      spinner_<%=field.fieldName%>.setSelection( <%= field.otherEntityNameLower %>List.indexOfFirst { it -> it.id==item.<%= field.fieldName %> } )
       <% } else { %>
       input_<%=field.fieldName%>.setText( item.<%=field.fieldName%>?.toString()?:"" )
       <% } break;
@@ -103,15 +150,17 @@ class <%= entityName %>DetailActivity : BaseActivity() {
             return
         }
 
-        <% fields.forEach(function(field){ %>
+        <% fields.forEach(function(field){  if(field.isDerived){return;} %>
         input_<%=field.fieldName%>.error = null
         <%switch (field.fieldType) {
           case 'String':%>
         item.<%=field.fieldName%> = input_<%=field.fieldName%>.text.toString()
           <%break;
-          case 'Long':%>
-        item.<%=field.fieldName%> = input_<%=field.fieldName%>.text.toString().toLongOrNull()
-          <%break;
+          case 'Long': if (field.isDependency){%>
+          item.<%=field.fieldName%> = (spinner_<%=field.fieldName%>.selectedItem as? <%=field.otherEntityName%>Dto)?.id
+          <% } else {%>
+            item.<%=field.fieldName%> = input_<%=field.fieldName%>.text.toString().toLongOrNull()
+          <%} break;
           case 'Int':%>
           item.<%=field.fieldName%> = input_<%=field.fieldName%>.text.toString().toIntOrNull()
           <%break;
@@ -127,7 +176,7 @@ class <%= entityName %>DetailActivity : BaseActivity() {
           default: if(field.isEnum){%>
           item.<%=field.fieldName%> = <%=field.fieldType %>.valueOf(input_<%=field.fieldName%>.text.toString())
           <% } else {%>
-        item.<%=field.fieldName%> = input_<%=field.fieldName%>.text.toString()
+          item.<%=field.fieldName%> = input_<%=field.fieldName%>.text.toString()
           <%} } %>
         <% }); %>
 
@@ -135,7 +184,7 @@ class <%= entityName %>DetailActivity : BaseActivity() {
         var cancel = false
         var focusView: View? = null
 
-        <% fields.forEach(function(field){ %>
+        <% fields.forEach(function(field){  if(field.isDerived){return;} %>
         if (!is<%=field.fieldName.substring(0,1).toUpperCase()%><%=field.fieldName.substring(1)%>Valid(item.<%=field.fieldName%>)) {
           input_<%=field.fieldName%>.error = getString(R.string.error_<%=entityNameLower%>_invalid_<%=field.fieldName%>)
           focusView = input_<%=field.fieldName%>
@@ -168,7 +217,7 @@ class <%= entityName %>DetailActivity : BaseActivity() {
     private fun onSaveSuccess(<%= entityName %>Dto: <%= entityName %>Dto) {
         finish()
     }
-    <% fields.forEach(function(field){ %>
+    <% fields.forEach(function(field){ if(field.isDerived){return;} %>
 
     private fun is<%=field.fieldName.substring(0,1).toUpperCase()%><%=field.fieldName.substring(1)%>Valid(field: <%= field.fieldType %>?): Boolean {
         //TODO: Replace this with your own logic

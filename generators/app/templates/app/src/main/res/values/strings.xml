@@ -47,5 +47,6 @@
     <string name="edit">Edit</string>
     <string name="cancel">Cancel</string>
     <string name="sure_to_delete">Are you sure to delete?</string>
+    <string name="dependency_load_error">Error getting resources</string>
     <!--strings-needle-->
 </resources>

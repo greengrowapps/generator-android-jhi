@@ -103,28 +103,50 @@ module.exports = class extends Generator {
           break;
       }
     }
+    if(this.props.fields.length>0) {
+      this.props.lastfield = this.props.fields[this.props.fields.length - 1];
+    }
+
+    this.props.hasDependencies = false;
 
     for (let relation of entityConfig.relationships) {
+
+      let isUser = relation.otherEntityName==='user';
+
       switch (relation.relationshipType) {
         case 'many-to-one':
+          this.props.hasDependencies |= (!isUser>0);
           if(relation.otherEntityField === 'id') {
             this.props.fields.push({
                 fieldName: relation.relationshipName + this._capitalize(relation.otherEntityField),
-                fieldType: 'Long'
+                fieldType: 'Long',
+                isDependency: !isUser,
+                otherEntityName: relation.otherEntityName.substring(0, 1).toUpperCase() + relation.otherEntityName.substring(1),
+                otherEntityNameLower: this._camelToSnake(relation.otherEntityName),
+                titleProperty: relation.otherEntityField ? relation.otherEntityField : 'id'
               });
+              this.props.lastfield = this.props.fields[this.props.fields.length-1];
           } else {
             this.props.fields.push({
                 fieldName: relation.relationshipName + 'Id',
-                fieldType: 'Long'
+                fieldType: 'Long',
+                isDependency: !isUser,
+                otherEntityName: relation.otherEntityName.substring(0, 1).toUpperCase() + relation.otherEntityName.substring(1),
+                otherEntityNameLower: this._camelToSnake(relation.otherEntityName),
+                titleProperty: relation.otherEntityField ? relation.otherEntityField : 'id'
               });
+              this.props.lastfield = this.props.fields[this.props.fields.length-1];
             this.props.fields.push({
                 fieldName: relation.relationshipName + this._capitalize(relation.otherEntityField),
-                fieldType: 'String'
+                fieldType: 'String',
+                isDerived: true
               });
           }
           break;
       }
     }
+
+    this.log(`Has dependencies: ${this.props.hasDependencies}`);
 
     const packageDir = this.props.packageName.replace(/\./g, '/');
     const oldPackageDir = 'com/greengrowapps/myapp';
