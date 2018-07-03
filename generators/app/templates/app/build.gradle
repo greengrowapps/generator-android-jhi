@@ -40,7 +40,10 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation project(':jhiusers')
+<% if(googleLogin) { %>
     implementation 'com.facebook.android:facebook-login:4.33.0'
+<% } if(googleLogin) { %>
     implementation 'com.google.android.gms:play-services-auth:15.0.0'
+<% } %>
     implementation 'com.greengrowapps:ggarest:0.16'
 }

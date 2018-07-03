@@ -2,7 +2,7 @@ package <%= packageName %>.core.l18n
 
 import android.content.Context
 import <%= packageName %>.R
-import <%= packageName %>.core.data.enum.*
+//imports-needle
 
 class EnumLocalization{
     companion object {

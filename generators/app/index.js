@@ -21,18 +21,30 @@ module.exports = class extends Generator {
         message: 'Type the app Package name',
         default: 'com.company.app'
       },
-      // {
-      //   type: 'confirm',
-      //   name: 'googleLogin',
-      //   message: 'Do you want social login with Google?',
-      //   default: true
-      // },
-      // {
-      //   type: 'confirm',
-      //   name: 'facebookLogin',
-      //   message: 'Do you want social login with Facebook?',
-      //   default: true
-      // }
+      {
+        type: 'input',
+        name: 'productionUrl',
+        message: 'Type the production url of your project',
+        default: 'https://jhipster.tech'
+      },
+      {
+        type: 'input',
+        name: 'developmentUrl',
+        message: 'Type the production url of your project',
+        default: 'http://192.168.1.6:8080'
+      },
+      {
+        type: 'confirm',
+        name: 'googleLogin',
+        message: 'Do you want social login with Google?',
+        default: true
+      },
+      {
+        type: 'confirm',
+        name: 'facebookLogin',
+        message: 'Do you want social login with Facebook?',
+        default: true
+      }
     ];
 
     return this.prompt(prompts).then(props => {

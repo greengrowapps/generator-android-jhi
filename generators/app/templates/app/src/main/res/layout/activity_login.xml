@@ -82,6 +82,7 @@
                 android:text="@string/action_sign_up"
                 android:textStyle="bold" />
 
+<% if(googleLogin) { %>
             <Button
                 android:id="@+id/email_sign_in_with_google_button"
                 style="?android:textAppearanceSmall"
@@ -90,7 +91,7 @@
                 android:layout_marginTop="16dp"
                 android:text="@string/action_login_with_google"
                 android:textStyle="bold" />
-
+<% } if(facebookLogin) { %>
             <Button
                 android:id="@+id/email_sign_in_with_facebook_button"
                 style="?android:textAppearanceSmall"
@@ -99,7 +100,7 @@
                 android:layout_marginTop="16dp"
                 android:text="@string/action_login_with_facebook"
                 android:textStyle="bold" />
-
+<% } %>
         </LinearLayout>
     </ScrollView>
 

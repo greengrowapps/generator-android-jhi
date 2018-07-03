@@ -24,10 +24,10 @@ class MyApplication : Application() {
         GgaRest.setSerializer(CustomSerializer())
 
         if(BuildConfig.DEBUG){
-            config = CoreConfiguration("http://192.168.1.6:8080")
+            config = CoreConfiguration("<%= developmentUrl %>")
         }
         else{
-            config = CoreConfiguration("https://mycounters.greengrowapps.com")
+            config = CoreConfiguration("<%= productionUrl %>")
         }
 
         jhiUsers = JhiUsersImpl.with(this,config.serverUrl,true,getSharedPreferences("JhiUsers", Context.MODE_PRIVATE))

@@ -13,7 +13,12 @@ import android.widget.TextView
 import com.greengrowapps.jhiusers.dto.User
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
-
+<% if (facebookLogin) { %>
+import com.facebook.login.LoginManager
+<% } if(googleLogin) { %>
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+<% } %>
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     companion object {
@@ -80,13 +85,35 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.nav_logout -> {
-                getJhiUsers().logout()
-                startActivity(LoginActivity.clearTopIntent(this))
+                performLogout()
             }
 //options-needle
         }
 
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
+    }
+    private fun performLogout(){
+      <% if(googleLogin) { %>
+      try {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+          .requestServerAuthCode(getString(R.string.default_web_client_id))
+          .requestEmail()
+          .build()
+        GoogleSignIn.getClient(this, gso).signOut()
+      }
+      catch (e:Exception){
+        //Ignore
+      }
+      <% } if(facebookLogin) { %>
+      try {
+        LoginManager.getInstance().logOut()
+      }
+      catch (e:Exception){
+        //Ignore
+      }
+      <% } %>
+      getJhiUsers().logout()
+      startActivity(LoginActivity.clearTopIntent(this))
     }
 }

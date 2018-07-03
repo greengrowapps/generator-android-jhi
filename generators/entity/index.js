@@ -207,6 +207,7 @@ module.exports = class extends Generator {
       this.fs.copyTpl(`${this.sourceRoot()}/${src}`, `${dest}`, this.props);
     });
 
+
     /* Add service method in Core */
 
     const coreImports =
@@ -359,7 +360,7 @@ module.exports = class extends Generator {
               `            return when(item){\n`;
 
     let toAppend = [];
-    for (let value of this.props.enumValues){
+    for (let value of this.props.enumValues) {
       toAppend.push( [`${enumNameSnake}_${value.toLowerCase()}`,`${value}`] );
       fun += `${enumName}.${value} -> with.getString(R.string.${enumNameSnake}_${value.toLowerCase()})\n`;
     }
@@ -371,13 +372,18 @@ module.exports = class extends Generator {
           `        }\n`+
           '        //functions-needle\n';
 
+    let imports = `import ${this.props.packageName}.core.data.enum.${enumName}\n`+
+                  '//imports-needle';
+
     this.fs.copy(
       `app/src/main/java/${packageDir}/core/l18n/EnumLocalization.kt`,
       `app/src/main/java/${packageDir}/core/l18n/EnumLocalization.kt`,
       {
         process: function(content) {
           let regEx = new RegExp('//functions-needle', 'g');
-          return content.toString().replace(regEx, fun);
+          let replaced = content.toString().replace(regEx, fun);
+          regEx = new RegExp('//imports-needle','g');
+          return replaced.toString().replace(regEx,imports);
         }
       }
     );

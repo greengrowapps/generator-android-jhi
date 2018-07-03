@@ -21,18 +21,21 @@ import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import android.widget.Toast
+<% if(facebookLogin) { %>
 import com.facebook.AccessToken
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
 import com.facebook.FacebookException
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
+<% } if(googleLogin) { %>
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
+<% } %>
 import com.greengrowapps.jhiusers.listeners.OnLoginListener
 import kotlinx.android.synthetic.main.activity_login.*
 import java.util.*
@@ -49,10 +52,11 @@ class LoginActivity: BaseActivity(), LoaderCallbacks<Cursor>, OnLoginListener {
         private const val REQUEST_READ_CONTACTS = 0
         private const val RC_SIGN_IN = 175
     }
-
+<% if(facebookLogin) { %>
     private var callbackManager: CallbackManager? = null
+<% } if(googleLogin) { %>
     private var mGoogleSignInClient: GoogleSignInClient? = null
-
+<% } %>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,15 +73,15 @@ class LoginActivity: BaseActivity(), LoaderCallbacks<Cursor>, OnLoginListener {
 
         email_sign_in_button.setOnClickListener { attemptLogin() }
 
-        email_sign_in_with_facebook_button.setOnClickListener{ loginWithFacebook() }
-
-        email_sign_in_with_google_button.setOnClickListener{ loginWithGoogle() }
-
         email_sign_up_button.setOnClickListener{ register() }
 
+<% if(facebookLogin) { %>
+        email_sign_in_with_facebook_button.setOnClickListener{ loginWithFacebook() }
         facebookSignInSetup()
-
+<% } if(googleLogin) { %>
+        email_sign_in_with_google_button.setOnClickListener{ loginWithGoogle() }
         googleSignInSetup()
+<% } %>
 
         if(getJhiUsers().isLoginSaved){
             getJhiUsers().autoLogin(this)
@@ -93,7 +97,7 @@ class LoginActivity: BaseActivity(), LoaderCallbacks<Cursor>, OnLoginListener {
 
         finish()
     }
-
+<% if(facebookLogin) { %>
     private fun facebookSignInSetup() {
         callbackManager = CallbackManager.Factory.create()
 
@@ -116,7 +120,10 @@ class LoginActivity: BaseActivity(), LoaderCallbacks<Cursor>, OnLoginListener {
                     }
                 })
     }
-
+    private fun loginWithFacebook() {
+      LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"))
+    }
+<% } if(googleLogin) { %>
 
     private fun googleSignInSetup() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -125,15 +132,28 @@ class LoginActivity: BaseActivity(), LoaderCallbacks<Cursor>, OnLoginListener {
                 .build()
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
     }
-
     private fun loginWithGoogle() {
-        val signInIntent = mGoogleSignInClient!!.signInIntent
-        startActivityForResult(signInIntent, RC_SIGN_IN)
+      val signInIntent = mGoogleSignInClient!!.signInIntent
+      startActivityForResult(signInIntent, RC_SIGN_IN)
     }
-
-    private fun loginWithFacebook() {
-        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"))
+    private fun handleSignInResult(task: Task<GoogleSignInAccount>?) {
+      try {
+        val account = task!!.getResult(ApiException::class.java)
+        handleSignInResult(account)
+      } catch (e: Exception) {
+        if(BuildConfig.DEBUG){
+          Toast.makeText(this,"Google login error "+e.message,Toast.LENGTH_SHORT).show()
+        }
+        //TODO show in ui
+      }
     }
+    private fun handleSignInResult(account: GoogleSignInAccount){
+      handleSignInResult(account.serverAuthCode?:"")
+    }
+    private fun handleSignInResult(token: String){
+      getJhiUsers().loginWithGoogle(token, this)
+    }
+<% } %>
 
     private fun populateAutoComplete() {
         if (!mayRequestContacts()) {
@@ -303,32 +323,16 @@ class LoginActivity: BaseActivity(), LoaderCallbacks<Cursor>, OnLoginListener {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+<% if(facebookLogin) { %>
         callbackManager?.onActivityResult(requestCode, resultCode, data)
+<% } %>
         super.onActivityResult(requestCode, resultCode, data)
-
+<% if(facebookLogin) { %>
         if (requestCode == RC_SIGN_IN) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             handleSignInResult(task)
         }
-    }
-
-    private fun handleSignInResult(task: Task<GoogleSignInAccount>?) {
-        try {
-            val account = task!!.getResult(ApiException::class.java)
-            handleSignInResult(account)
-        } catch (e: Exception) {
-            if(BuildConfig.DEBUG){
-                Toast.makeText(this,"Google login error "+e.message,Toast.LENGTH_SHORT).show()
-            }
-            //TODO show in ui
-        }
-    }
-
-    private fun handleSignInResult(account: GoogleSignInAccount){
-        handleSignInResult(account.serverAuthCode?:"")
-    }
-    private fun handleSignInResult(token: String){
-        getJhiUsers().loginWithGoogle(token, this)
+<% } %>
     }
 
     object ProfileQuery {
