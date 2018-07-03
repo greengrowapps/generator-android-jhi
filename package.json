@@ -1,11 +1,11 @@
 {
   "name": "generator-android-jhi",
-  "version": "0.0.0",
-  "description": "Scaffolds Android Kotlin-Based App that uses Jhipster Api",
-  "homepage": "https://github.com/greengrowapps/generator-jhi",
+  "version": "0.0.1",
+  "description": "Scaffolds an Android Kotlin-Based App that consumes a scaffolded by JHipster Api",
+  "homepage": "https://github.com/greengrowapps/generator-android-jhi",
   "author": {
     "name": "Green grow apps",
-    "email": "greengrowapps@gmail.com",
+    "email": "info@greengrowapps.com",
     "url": "https://www.greengrowapps.com"
   },
   "files": [
