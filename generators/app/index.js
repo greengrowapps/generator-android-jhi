@@ -79,7 +79,7 @@ module.exports = class extends Generator {
     const templateFiles = [
       ['gradle.properties'],
       ['settings.gradle'],
-      ['.gitignore'],
+      ['_.gitignore', '.gitignore'],
       ['build.gradle'],
       ['app/build.gradle'],
       ['jhiusers/build.gradle'],
@@ -91,7 +91,7 @@ module.exports = class extends Generator {
         'jhiusers/src/main/java/com/greengrowapps/jhiusers',
         'jhiusers/src/main/java/com/greengrowapps/jhiusers'
       ],
-      ['app/.gitignore', 'app/.gitignore'],
+      ['app/_.gitignore', 'app/.gitignore'],
       ['app/proguard-rules.pro'],
       [`app/src/main/res/menu`],
       [`app/src/main/res/layout`],

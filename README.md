@@ -12,7 +12,15 @@ npm install -g yo
 npm install -g generator-android-jhi
 ```
 
-Then generate your new project:
+## Usage
+
+Create a folder and go inside
+
+```bash
+mkdir my-android-project && cd my-android-project
+```
+
+then generate the code:
 
 ```bash
 yo android-jhi
@@ -25,6 +33,23 @@ yo android-jhi:entity
 ```
 
 Then you can choose which entities do you want to consume with your mobile App. CRUD operations will be scaffolded 
+
+Finally import the project with Android Studio
+
+## Configure Social Login
+
+On your web/api project use the [jhipster-social-login-api](https://github.com/greengrowapps/generator-jhipster-social-login-api) to add the extra controllers that you need and follow the instructions
+
+For google, run 
+```bash
+./gradlew signingReport
+```
+
+And generate as many Android credentials as you need (one for packageName-keystoreSHA1 pair)
+
+then copy the Client-id from YOUR WEB CREDENTIAL (don't use the client-id from the Android credentials) and replace the value of the "default_web_client_id" string resource
+
+For facebook replace the two string resources for de values in your credential
 
 ## Getting To Know Yeoman
 
