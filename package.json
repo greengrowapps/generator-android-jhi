@@ -80,6 +80,6 @@
       "prettier"
     ]
   },
-  "repository": "git@github.com:greengrowapps/generator-jhi.git",
+  "repository": "git@github.com:greengrowapps/generator-android-jhi.git",
   "license": "Apache-2.0"
 }
