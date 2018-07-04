@@ -312,7 +312,7 @@ module.exports = class extends Generator {
       '            android:theme="@style/AppTheme.NoActionBar">\n' +
       '            <meta-data\n' +
       '                android:name="android.support.PARENT_ACTIVITY"\n' +
-      `                android:value="${this.props.packageName}.BaseActivity" />\n` +
+      `                android:value="${this.props.packageName}.MainActivity" />\n` +
       '        </activity>\n' +
       '    <activity\n' +
       `            android:name=".${this.props.entityName}DetailActivity"\n` +
@@ -321,7 +321,7 @@ module.exports = class extends Generator {
         }_detail">\n` +
       '            <meta-data\n' +
       '                android:name="android.support.PARENT_ACTIVITY"\n' +
-      `                android:value="${this.props.packageName}.BaseActivity" />\n` +
+      `                android:value="${this.props.packageName}.${this.props.entityName}Activity" />\n` +
       '        </activity>\n' +
       '      <!--activity-needle-->\n';
 

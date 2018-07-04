@@ -12,10 +12,11 @@ import android.widget.Toast
 import <%= packageName %>.core.validation.UserValidation
 import com.greengrowapps.jhiusers.dto.User
 import com.greengrowapps.jhiusers.listeners.OnUpdateUserListener
+import com.greengrowapps.jhiusers.listeners.OnChangePasswordListener
 
 import kotlinx.android.synthetic.main.activity_account.*
 
-class AccountActivity() : BaseActivity(), OnUpdateUserListener {
+class AccountActivity() : BaseActivity(), OnUpdateUserListener, OnChangePasswordListener {
 
     companion object {
         fun openIntent(from:Context): Intent {
@@ -32,6 +33,9 @@ class AccountActivity() : BaseActivity(), OnUpdateUserListener {
         setupActionBar()
 
         save_button.setOnClickListener { attemptSave() }
+
+        change_password_button.setOnClickListener{ attemptChangePassword() }
+
         showProgress(true)
     }
 
@@ -93,6 +97,37 @@ class AccountActivity() : BaseActivity(), OnUpdateUserListener {
         }
     }
 
+    private fun attemptChangePassword() {
+        isSaving = true
+        // Reset errors.
+        password.error = null
+        repeatPassword.error = null
+
+        val passwordStr = password.text.toString()
+        val repeatPasswordStr = repeatPassword.text.toString()
+
+        var cancel = false
+        var focusView: View? = null
+
+        if (!UserValidation.isValidPassword(passwordStr)) {
+          password.error = getString(R.string.error_invalid_password)
+          focusView = password
+          cancel = true
+        }
+        if (!passwordStr.equals(repeatPasswordStr)) {
+          repeatPassword.error = getString(R.string.error_password_not_match)
+          focusView = repeatPassword
+          cancel = true
+        }
+
+        if (cancel) {
+          focusView?.requestFocus()
+        } else {
+          showProgress(true)
+          getJhiUsers().changePassword(passwordStr,this)
+        }
+    }
+
     override fun onUpdateUserSuccess(user: User?) {
         isSaving=false
         showProgress(false)
@@ -103,6 +138,18 @@ class AccountActivity() : BaseActivity(), OnUpdateUserListener {
         isSaving=false
         showProgress(false)
         Toast.makeText(this,R.string.save_error,Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onChangePasswordSuccess() {
+      isSaving=false
+      showProgress(false)
+      Toast.makeText(this,R.string.save_success,Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onChangePasswordError(error: String?) {
+      isSaving=false
+      showProgress(false)
+      Toast.makeText(this,R.string.save_error,Toast.LENGTH_SHORT).show()
     }
 
     private fun showProgress(show: Boolean) {
