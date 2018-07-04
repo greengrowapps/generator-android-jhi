@@ -1,6 +1,6 @@
 {
   "name": "generator-android-jhi",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Scaffolds an Android Kotlin-Based App that consumes a scaffolded by JHipster Api",
   "homepage": "https://github.com/greengrowapps/generator-android-jhi",
   "author": {
