@@ -1,4 +1,4 @@
-package com.company.app.core.messaging
+package <%= packageName %>.core.messaging
 
 import android.util.Log
 import com.greengrowapps.ggarest.GgaRest

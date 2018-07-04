@@ -75,6 +75,8 @@ class LoginActivity: BaseActivity(), LoaderCallbacks<Cursor>, OnLoginListener {
 
         email_sign_up_button.setOnClickListener{ register() }
 
+        recover_password_button.setOnClickListener{ startActivity(RecoverPasswordActivity.openIntent(this))}
+
 <% if(facebookLogin) { %>
         email_sign_in_with_facebook_button.setOnClickListener{ loginWithFacebook() }
         facebookSignInSetup()

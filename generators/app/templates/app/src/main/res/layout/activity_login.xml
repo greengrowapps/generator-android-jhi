@@ -101,6 +101,14 @@
                 android:text="@string/action_login_with_facebook"
                 android:textStyle="bold" />
 <% } %>
+            <Button
+              android:id="@+id/recover_password_button"
+              style="?android:textAppearanceSmall"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="16dp"
+              android:text="@string/recover_password"
+              android:textStyle="bold" />
         </LinearLayout>
     </ScrollView>
 

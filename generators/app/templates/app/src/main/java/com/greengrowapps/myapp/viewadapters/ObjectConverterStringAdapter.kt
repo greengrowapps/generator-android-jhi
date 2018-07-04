@@ -1,4 +1,4 @@
-package com.company.app.viewadapters
+package <%= packageName %>.viewadapters
 
 import android.content.Context
 import android.view.LayoutInflater

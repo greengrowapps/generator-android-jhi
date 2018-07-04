@@ -7,8 +7,8 @@ public class JhiUsersApi {
     private static final String LOGIN_ENDPOINT = "/api/authenticate";
     private static final String REGISTER_ENDPOINT = "/api/register";
     private static final String ACCOUNT_ENDPOINT = "/api/account";
-    private static final String CHANGE_PASSWORD_ENDPOINT = "/api/account/change_password";
-    private static final String RECOVER_PASSWORD_ENDPOINT = "/api/account/reset_password/init";
+    private static final String CHANGE_PASSWORD_ENDPOINT = "/api/account/change-password";
+    private static final String RECOVER_PASSWORD_ENDPOINT = "/api/account/reset-password/init";
     private static final String GOOGLE_SIGN_UP_ENDPOINT = "/api/authenticate/appGoogle";
     private static final String FACEBOOK_SIGN_UP_ENDPOINT = "/api/authenticate/appFacebook";
 

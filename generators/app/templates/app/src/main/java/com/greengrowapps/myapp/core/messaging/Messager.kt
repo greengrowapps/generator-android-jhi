@@ -1,4 +1,4 @@
-package com.company.app.core.messaging
+package <%= packageName %>.core.messaging
 
 interface Messager {
     fun send(topic: String, message: String)

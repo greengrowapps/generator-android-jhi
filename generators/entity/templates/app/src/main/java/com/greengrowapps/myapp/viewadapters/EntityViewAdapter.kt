@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.text.format.DateFormat
-import com.company.app.core.l18n.EnumLocalization
+import <%= packageName %>.core.l18n.EnumLocalization
 import <%= packageName %>.core.data.enum.*
 import <%= packageName %>.R
 import <%= packageName %>.core.data.<%= entityNameLower %>.<%= entityName %>Dto

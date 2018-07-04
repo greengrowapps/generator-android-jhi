@@ -148,6 +148,10 @@ module.exports = class extends Generator {
         `app/src/main/java/${packageDir}/MyApplication.kt`
       ],
       [
+        `app/src/main/java/${oldPackageDir}/RecoverPasswordActivity.kt`,
+        `app/src/main/java/${packageDir}/RecoverPasswordActivity.kt`
+      ],
+      [
         `app/src/main/java/${oldPackageDir}/RegisterActivity.kt`,
         `app/src/main/java/${packageDir}/RegisterActivity.kt`
       ],

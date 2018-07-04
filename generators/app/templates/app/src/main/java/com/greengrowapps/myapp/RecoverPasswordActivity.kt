@@ -1,50 +1,54 @@
 package <%= packageName %>
 
+
+import android.Manifest.permission.READ_CONTACTS
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
-import android.annotation.TargetApi
-import android.content.pm.PackageManager
-import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatActivity
 import android.app.LoaderManager.LoaderCallbacks
-import android.content.CursorLoader
-import android.content.Loader
+import android.content.*
+import android.content.pm.PackageManager
 import android.database.Cursor
 import android.net.Uri
-import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
 import android.provider.ContactsContract
-import android.text.TextUtils
+import android.support.design.widget.Snackbar
+import android.support.v7.app.AlertDialog
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
 import android.widget.TextView
-
-import java.util.ArrayList
-import android.Manifest.permission.READ_CONTACTS
 import android.widget.Toast
-import com.greengrowapps.jhiusers.listeners.OnRegisterListener
 import <%= packageName %>.core.validation.UserValidation
+import com.greengrowapps.jhiusers.listeners.OnRecoverPasswordRequestListener
+import kotlinx.android.synthetic.main.activity_recover_password.*
+import java.util.*
 
-import kotlinx.android.synthetic.main.activity_register.*
+class RecoverPasswordActivity : BaseActivity(), LoaderCallbacks<Cursor>, OnRecoverPasswordRequestListener {
 
-class RegisterActivity : BaseActivity(), LoaderCallbacks<Cursor>, OnRegisterListener {
+
+    companion object {
+      private val REQUEST_READ_CONTACTS = 0
+
+      fun openIntent(from: Context) : Intent{
+        return Intent(from,RecoverPasswordActivity::class.java)
+      }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_register)
+        setContentView(R.layout.activity_recover_password)
         // Set up the login form.
         populateAutoComplete()
-        repeatPassword.setOnEditorActionListener(TextView.OnEditorActionListener { _, id, _ ->
+        email.setOnEditorActionListener(TextView.OnEditorActionListener { _, id, _ ->
             if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
-                attemptRegister()
+                attemptRecover()
                 return@OnEditorActionListener true
             }
             false
         })
 
-        email_sign_up_button.setOnClickListener { attemptRegister() }
+        email_recover_button.setOnClickListener { attemptRecover() }
     }
 
     private fun populateAutoComplete() {
@@ -81,44 +85,15 @@ class RegisterActivity : BaseActivity(), LoaderCallbacks<Cursor>, OnRegisterList
         }
     }
 
-    private fun attemptRegister() {
+    private fun attemptRecover() {
         // Reset errors.
         email.error = null
-        password.error = null
-        repeatPassword.error = null
 
-        // Store values at the time of the login attempt.
         val emailStr = email.text.toString()
-        val passwordStr = password.text.toString()
-        val repeatPasswordStr = repeatPassword.text.toString()
-        val firstNameStr = first_name.text.toString()
-        val lastNameStr = last_name.text.toString()
-
 
         var cancel = false
         var focusView: View? = null
 
-        // Check for a valid password, if the user entered one.
-        if (!UserValidation.isValidPassword(passwordStr)) {
-            password.error = getString(R.string.error_invalid_password)
-            focusView = password
-            cancel = true
-        }
-        if (!UserValidation.isValidFirstName(firstNameStr)) {
-          first_name.error = getString(R.string.error_invalid_first_name)
-          focusView = first_name
-          cancel = true
-        }
-        if (!UserValidation.isValidLastName(lastNameStr)) {
-          last_name.error = getString(R.string.error_invalid_last_name)
-          focusView = first_name
-          cancel = true
-        }
-        if (!passwordStr.equals(repeatPasswordStr)) {
-            repeatPassword.error = getString(R.string.error_password_not_match)
-            focusView = repeatPassword
-            cancel = true
-        }
         if (!UserValidation.isValidEmail(emailStr)) {
             email.error = getString(R.string.error_invalid_email)
             focusView = email
@@ -133,25 +108,20 @@ class RegisterActivity : BaseActivity(), LoaderCallbacks<Cursor>, OnRegisterList
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true)
-            getJhiUsers().register(emailStr,firstNameStr,lastNameStr,passwordStr,this,null)
+            getJhiUsers().recoverPassword(emailStr,this)
         }
     }
 
-    override fun onRegisterSuccess() {
-        finish()
+    override fun onRecoverPasswordSuccess() {
+
+      AlertDialog.Builder(this)
+        .setMessage(R.string.recover_password_success)
+        .setPositiveButton(R.string.ok, DialogInterface.OnClickListener{ _,_ -> finish() })
+        .show()
     }
 
-    override fun onRegisterError(error: String?) {
-      error?.let {
-        if(it.contains("emailexists")){
-          email.error = getString(R.string.error_existing_email)
-        }
-        else{
-          Toast.makeText(this, R.string.registerErrorMsg, Toast.LENGTH_SHORT).show()
-        }
-      }?: run {
-        Toast.makeText(this, R.string.registerErrorMsg, Toast.LENGTH_SHORT).show()
-      }
+    override fun onRecoverPasswordError(error: String?) {
+      Toast.makeText(this, R.string.recoverErrorMsg, Toast.LENGTH_SHORT).show()
       showProgress(false)
 
     }
@@ -159,23 +129,23 @@ class RegisterActivity : BaseActivity(), LoaderCallbacks<Cursor>, OnRegisterList
     private fun showProgress(show: Boolean) {
         val shortAnimTime = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
 
-        login_form.visibility = if (show) View.GONE else View.VISIBLE
-        login_form.animate()
+        recover_form.visibility = if (show) View.GONE else View.VISIBLE
+      recover_form.animate()
                 .setDuration(shortAnimTime)
                 .alpha((if (show) 0 else 1).toFloat())
                 .setListener(object : AnimatorListenerAdapter() {
                     override fun onAnimationEnd(animation: Animator) {
-                        login_form.visibility = if (show) View.GONE else View.VISIBLE
+                      recover_form.visibility = if (show) View.GONE else View.VISIBLE
                     }
                 })
 
-        login_progress.visibility = if (show) View.VISIBLE else View.GONE
-        login_progress.animate()
+        recover_progress.visibility = if (show) View.VISIBLE else View.GONE
+      recover_progress.animate()
                 .setDuration(shortAnimTime)
                 .alpha((if (show) 1 else 0).toFloat())
                 .setListener(object : AnimatorListenerAdapter() {
                     override fun onAnimationEnd(animation: Animator) {
-                        login_progress.visibility = if (show) View.VISIBLE else View.GONE
+                      recover_progress.visibility = if (show) View.VISIBLE else View.GONE
                     }
                 })
     }
@@ -212,7 +182,7 @@ class RegisterActivity : BaseActivity(), LoaderCallbacks<Cursor>, OnRegisterList
 
     private fun addEmailsToAutoComplete(emailAddressCollection: List<String>) {
         //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
-        val adapter = ArrayAdapter(this@RegisterActivity,
+        val adapter = ArrayAdapter(this@RecoverPasswordActivity,
                 android.R.layout.simple_dropdown_item_1line, emailAddressCollection)
 
         email.setAdapter(adapter)
@@ -224,13 +194,5 @@ class RegisterActivity : BaseActivity(), LoaderCallbacks<Cursor>, OnRegisterList
                 ContactsContract.CommonDataKinds.Email.IS_PRIMARY)
         val ADDRESS = 0
         val IS_PRIMARY = 1
-    }
-
-    companion object {
-
-        /**
-         * Id to identity READ_CONTACTS permission request.
-         */
-        private val REQUEST_READ_CONTACTS = 0
     }
 }
