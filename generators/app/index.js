@@ -44,6 +44,12 @@ module.exports = class extends Generator {
         name: 'facebookLogin',
         message: 'Do you want social login with Facebook?',
         default: true
+      },
+      {
+        type: 'confirm',
+        name: 'websockets',
+        message: 'Do you want Websockets?',
+        default: true
       }
     ];
 
@@ -96,7 +102,51 @@ module.exports = class extends Generator {
       ['app/build.gradle'],
       ['jhiusers/build.gradle'],
       ['app/src/main/androidManifest.xml'],
-      [`app/src/main/java/${oldPackageDir}`, `app/src/main/java/${packageDir}`],
+      [
+        `app/src/main/java/${oldPackageDir}/core/cache`,
+        `app/src/main/java/${packageDir}/core/cache`
+      ],
+      [
+        `app/src/main/java/${oldPackageDir}/core/config`,
+        `app/src/main/java/${packageDir}/core/config`
+      ],
+      [`app/src/main/java/${oldPackageDir}/core/l18n`, `app/src/main/java/${packageDir}/core/l18n`],
+      [
+        `app/src/main/java/${oldPackageDir}/core/Core.kt`,
+        `app/src/main/java/${packageDir}/core/Core.kt`
+      ],
+      [
+        `app/src/main/java/${oldPackageDir}/core/CustomSerializer.kt`,
+        `app/src/main/java/${packageDir}/core/CustomSerializer.kt`
+      ],
+      [
+        `app/src/main/java/${oldPackageDir}/viewadapters`,
+        `app/src/main/java/${packageDir}/viewadapters`
+      ],
+      [
+        `app/src/main/java/${oldPackageDir}/BaseActivity.kt`,
+        `app/src/main/java/${packageDir}/BaseActivity.kt`
+      ],
+      [
+        `app/src/main/java/${oldPackageDir}/LoginActivity.kt`,
+        `app/src/main/java/${packageDir}/LoginActivity.kt`
+      ],
+      [
+        `app/src/main/java/${oldPackageDir}/MainActivity.kt`,
+        `app/src/main/java/${packageDir}/MainActivity.kt`
+      ],
+      [
+        `app/src/main/java/${oldPackageDir}/MyApplication.kt`,
+        `app/src/main/java/${packageDir}/MyApplication.kt`
+      ],
+      [
+        `app/src/main/java/${oldPackageDir}/RegisterActivity.kt`,
+        `app/src/main/java/${packageDir}/RegisterActivity.kt`
+      ],
+      [
+        `app/src/main/java/${oldPackageDir}/SplashActivity.kt`,
+        `app/src/main/java/${packageDir}/SplashActivity.kt`
+      ],
       [`app/src/test/java/${oldPackageDir}`, `app/src/test/java/${packageDir}`],
       ['jhiusers/src/main/androidManifest.xml'],
       [
@@ -111,12 +161,15 @@ module.exports = class extends Generator {
       [`app/src/main/res/values-v21`]
     ];
 
+    if (this.props.websockets) {
+      templateFiles.push([
+        `app/src/main/java/${oldPackageDir}/core/messaging`,
+        `app/src/main/java/${packageDir}/core/messaging`
+      ]);
+    }
+
     templateFiles.forEach(([src, dest = src]) => {
-      this.fs.copyTpl(
-        `${this.sourceRoot()}/${src}`,
-        `${dest}`,
-        this.props
-      );
+      this.fs.copyTpl(`${this.sourceRoot()}/${src}`, `${dest}`, this.props);
     });
 
     this.config.set('packageName', this.props.packageName);
@@ -125,7 +178,5 @@ module.exports = class extends Generator {
     this.config.save();
   }
 
-  install() {
-    //this.installDependencies();
-  }
+  install() {}
 };
