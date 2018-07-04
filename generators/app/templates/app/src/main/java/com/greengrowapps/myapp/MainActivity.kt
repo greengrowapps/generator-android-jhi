@@ -49,13 +49,13 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
       getJhiUsers().getLogedUser { user -> populateUser(user) }
     }
 
-  private fun populateUser(user: User?) {
-    val hView = nav_view.getHeaderView(0)
-    val navUser = hView.findViewById<TextView>(R.id.drawer_user_name)
-    val navEmail = hView.findViewById<TextView>(R.id.drawer_user_email)
-    navUser.text = "${user?.firstName} ${user?.lastName}"
-    navEmail.text = "${user?.email}"
-  }
+    private fun populateUser(user: User?) {
+      val hView = nav_view.getHeaderView(0)
+      val navUser = hView.findViewById<TextView>(R.id.drawer_user_name)
+      val navEmail = hView.findViewById<TextView>(R.id.drawer_user_email)
+      navUser.text = "${user?.firstName} ${user?.lastName}"
+      navEmail.text = "${user?.email}"
+    }
 
     override fun onBackPressed() {
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
@@ -86,6 +86,9 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         when (item.itemId) {
             R.id.nav_logout -> {
                 performLogout()
+            }
+            R.id.nav_account -> {
+              startActivity(AccountActivity.openIntent(this))
             }
 //options-needle
         }

@@ -9,11 +9,11 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".RegisterActivity">
+    tools:context=".AccountActivity">
 
     <!-- Login progress -->
     <ProgressBar
-        android:id="@+id/login_progress"
+        android:id="@+id/account_progress"
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -21,7 +21,7 @@
         android:visibility="gone" />
 
     <ScrollView
-        android:id="@+id/login_form"
+        android:id="@+id/account_form"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -47,34 +47,43 @@
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content">
-
-              <AutoCompleteTextView
-                android:id="@+id/first_name"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/promt_first_name"
-                android:inputType="textPersonName"
-                android:maxLines="1"
-                android:singleLine="true" />
+                android:layout_height="wrap_content">
+
+                <AutoCompleteTextView
+                    android:id="@+id/first_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/promt_first_name"
+                    android:inputType="textPersonName"
+                    android:maxLines="1"
+                    android:singleLine="true" />
 
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content">
-
-              <AutoCompleteTextView
-                android:id="@+id/last_name"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/promt_last_name"
-                android:inputType="textPersonName"
-                android:maxLines="1"
-                android:singleLine="true" />
+                android:layout_height="wrap_content">
+
+                <AutoCompleteTextView
+                    android:id="@+id/last_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/promt_last_name"
+                    android:inputType="textPersonName"
+                    android:maxLines="1"
+                    android:singleLine="true" />
 
             </android.support.design.widget.TextInputLayout>
+
+            <Button
+                android:id="@+id/save_button"
+                style="?android:textAppearanceSmall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/action_save"
+                android:textStyle="bold" />
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -101,7 +110,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_password"
                     android:imeActionId="6"
-                    android:imeActionLabel="@string/action_sign_up_short"
+                    android:imeActionLabel="@string/action_change"
                     android:imeOptions="actionUnspecified"
                     android:inputType="textPassword"
                     android:maxLines="1"
@@ -110,12 +119,12 @@
             </android.support.design.widget.TextInputLayout>
 
             <Button
-                android:id="@+id/email_sign_up_button"
+                android:id="@+id/change_password_button"
                 style="?android:textAppearanceSmall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="@string/action_sign_up"
+                android:text="@string/change_password"
                 android:textStyle="bold" />
 
         </LinearLayout>

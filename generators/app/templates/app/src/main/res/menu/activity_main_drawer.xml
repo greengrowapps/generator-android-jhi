@@ -5,14 +5,15 @@
 
     <group android:checkableBehavior="single">
       <!--<menu-needle-->
-
-      <!--<item-->
-            <!--android:id="@+id/nav_counters"-->
-            <!--android:icon="@drawable/ic_menu_camera"-->
-            <!--android:title="@string/counters" />-->
     </group>
 
     <item android:title="@string/account">
+        <menu>
+          <item
+            android:id="@+id/nav_account"
+            android:icon="@drawable/ic_menu_share"
+            android:title="@string/my_account" />
+        </menu>
         <menu>
             <item
                 android:id="@+id/nav_logout"

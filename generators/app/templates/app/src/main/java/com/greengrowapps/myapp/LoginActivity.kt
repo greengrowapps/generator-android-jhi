@@ -245,7 +245,16 @@ class LoginActivity: BaseActivity(), LoaderCallbacks<Cursor>, OnLoginListener {
     }
 
     override fun onLoginError(error: String?) {
-        Toast.makeText(this,getString(R.string.loginErrorMsg),Toast.LENGTH_SHORT).show()
+        error?.let {
+          if(it.contains("was not activated")){
+            email.error = getString(R.string.activate_account_first)
+          }
+          else{
+            Toast.makeText(this, R.string.loginErrorMsg, Toast.LENGTH_SHORT).show()
+          }
+        }?: run {
+          Toast.makeText(this, R.string.loginErrorMsg, Toast.LENGTH_SHORT).show()
+        }
         showProgress(false)
     }
 

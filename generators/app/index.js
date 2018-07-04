@@ -110,6 +110,10 @@ module.exports = class extends Generator {
         `app/src/main/java/${oldPackageDir}/core/config`,
         `app/src/main/java/${packageDir}/core/config`
       ],
+      [
+        `app/src/main/java/${oldPackageDir}/core/validation`,
+        `app/src/main/java/${packageDir}/core/validation`
+      ],
       [`app/src/main/java/${oldPackageDir}/core/l18n`, `app/src/main/java/${packageDir}/core/l18n`],
       [
         `app/src/main/java/${oldPackageDir}/core/Core.kt`,
@@ -126,6 +130,10 @@ module.exports = class extends Generator {
       [
         `app/src/main/java/${oldPackageDir}/BaseActivity.kt`,
         `app/src/main/java/${packageDir}/BaseActivity.kt`
+      ],
+      [
+        `app/src/main/java/${oldPackageDir}/AccountActivity.kt`,
+        `app/src/main/java/${packageDir}/AccountActivity.kt`
       ],
       [
         `app/src/main/java/${oldPackageDir}/LoginActivity.kt`,
