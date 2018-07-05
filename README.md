@@ -47,7 +47,7 @@ For google, run
 
 And generate as many Android credentials as you need (one for packageName-keystoreSHA1 pair)
 
-then copy the Client-id from YOUR WEB CREDENTIAL (don't use the client-id from the Android credentials) and replace the value of the "default_web_client_id" string resource
+then copy the Client-id from YOUR WEB CREDENTIAL (don't use the client-id from the Android credentials) and replace the value of the "google_login_web_client_id" string resource
 
 For facebook replace the two string resources for de values in your credential
 

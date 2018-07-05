@@ -24,7 +24,7 @@ class CombinedCache(private val preferences: SharedPreferences, private val seri
         return null
     }
     fun clear(key: String){
-
+      preferences.edit().remove(key).apply()
     }
     fun clearAll(){
 

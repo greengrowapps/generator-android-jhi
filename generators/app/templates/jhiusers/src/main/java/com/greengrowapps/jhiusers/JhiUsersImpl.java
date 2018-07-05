@@ -174,7 +174,7 @@ public class JhiUsersImpl implements JhiUsers{
             user = null;
             gettingUser = false;
         }
-        authToken = null;
+        authToken = "";
         if(statusListener!=null){
             statusListener.onLogout();
         }

@@ -100,7 +100,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
       <% if(googleLogin) { %>
       try {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-          .requestServerAuthCode(getString(R.string.default_web_client_id))
+          .requestServerAuthCode(getString(R.string.google_login_web_client_id))
           .requestEmail()
           .build()
         GoogleSignIn.getClient(this, gso).signOut()

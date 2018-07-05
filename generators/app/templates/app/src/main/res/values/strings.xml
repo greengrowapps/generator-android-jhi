@@ -1,13 +1,14 @@
 <resources>
     <string name="app_name"><%= appName %></string>
 
+<% if(facebookLogin) { %>
     <!-- Strings related to facebook login -->
     <string name="fb_login_protocol_scheme" translatable="false">fbXXXXXXXXXXXXXX</string>
     <string name="facebook_app_id" translatable="false">fbXXXXXXXXXXXXXXXX</string>
-
+<% } if(googleLogin) { %>
     <!-- Strings related to google login -->
-    <string name="default_web_client_id" translatable="false">XXXXXXXXXXXXXX.apps.googleusercontent.com</string>
-
+    <string name="google_login_web_client_id" translatable="false">XXXXXXXXXXXXXX.apps.googleusercontent.com</string>
+<% } %>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in</string>

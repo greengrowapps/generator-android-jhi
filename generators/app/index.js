@@ -30,7 +30,7 @@ module.exports = class extends Generator {
       {
         type: 'input',
         name: 'developmentUrl',
-        message: 'Type the production url of your project',
+        message: 'Type the development url of your project',
         default: 'http://192.168.1.6:8080'
       },
       {
@@ -43,6 +43,12 @@ module.exports = class extends Generator {
         type: 'confirm',
         name: 'facebookLogin',
         message: 'Do you want social login with Facebook?',
+        default: true
+      },
+      {
+        type: 'confirm',
+        name: 'pushNotifications',
+        message: 'Do you want Firebase Cloud Messaging (Push notifications)?',
         default: true
       },
       {
@@ -114,7 +120,10 @@ module.exports = class extends Generator {
         `app/src/main/java/${oldPackageDir}/core/validation`,
         `app/src/main/java/${packageDir}/core/validation`
       ],
-      [`app/src/main/java/${oldPackageDir}/core/l18n`, `app/src/main/java/${packageDir}/core/l18n`],
+      [
+        `app/src/main/java/${oldPackageDir}/core/l18n`,
+        `app/src/main/java/${packageDir}/core/l18n`
+      ],
       [
         `app/src/main/java/${oldPackageDir}/core/Core.kt`,
         `app/src/main/java/${packageDir}/core/Core.kt`
@@ -172,7 +181,17 @@ module.exports = class extends Generator {
       [`app/src/main/res/values`],
       [`app/src/main/res/values-v21`]
     ];
-
+    if (this.props.pushNotifications) {
+      templateFiles.push([
+        `app/src/main/java/${oldPackageDir}/core/push`,
+        `app/src/main/java/${packageDir}/core/push`
+      ]);
+      templateFiles.push([
+        `app/src/main/java/${oldPackageDir}/core/data/push`,
+        `app/src/main/java/${packageDir}/core/data/push`
+      ]);
+      templateFiles.push([`app/google-services.json`]);
+    }
     if (this.props.websockets) {
       templateFiles.push([
         `app/src/main/java/${oldPackageDir}/core/messaging`,

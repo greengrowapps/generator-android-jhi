@@ -129,7 +129,7 @@ class LoginActivity: BaseActivity(), LoaderCallbacks<Cursor>, OnLoginListener {
 
     private fun googleSignInSetup() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestServerAuthCode(getString(R.string.default_web_client_id))
+                .requestServerAuthCode(getString(R.string.google_login_web_client_id))
                 .requestEmail()
                 .build()
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
