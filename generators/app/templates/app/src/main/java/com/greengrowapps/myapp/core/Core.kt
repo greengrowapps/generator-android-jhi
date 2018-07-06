@@ -10,6 +10,9 @@ import <%= packageName %>.core.config.CoreConfiguration
 import <%= packageName %>.core.data.firebase_token.FirebaseTokenDto
 import com.greengrowapps.ggarest.listeners.OnObjResponseListener
 import com.greengrowapps.jhiusers.listeners.OnLoginStatusListener
+<% if(pushNotification) { %>
+import com.google.firebase.iid.FirebaseInstanceId
+<% } %>
 //import-needle
 
 class Core(private val jhiUsers: JhiUsers, private val configuration: CoreConfiguration, private val preferences: SharedPreferences, private val serializer: Serializer) {
@@ -99,6 +102,8 @@ class Core(private val jhiUsers: JhiUsers, private val configuration: CoreConfig
         if(!isFirebaseTokenConnectedWithUser()) {
           connectFirebaseTokenWithUser(it, authToken)
         }
+      }?: run {
+        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener { sendFirebaseToken(it.token) }
       }
     }
 <% } %>
