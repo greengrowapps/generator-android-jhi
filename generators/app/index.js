@@ -107,7 +107,7 @@ module.exports = class extends Generator {
       ['build.gradle'],
       ['app/build.gradle'],
       ['jhiusers/build.gradle'],
-      ['app/src/main/androidManifest.xml'],
+      ['app/src/main/AndroidManifest.xml'],
       [
         `app/src/main/java/${oldPackageDir}/core/cache`,
         `app/src/main/java/${packageDir}/core/cache`
@@ -169,7 +169,7 @@ module.exports = class extends Generator {
         `app/src/main/java/${packageDir}/SplashActivity.kt`
       ],
       [`app/src/test/java/${oldPackageDir}`, `app/src/test/java/${packageDir}`],
-      ['jhiusers/src/main/androidManifest.xml'],
+      ['jhiusers/src/main/AndroidManifest.xml'],
       [
         'jhiusers/src/main/java/com/greengrowapps/jhiusers',
         'jhiusers/src/main/java/com/greengrowapps/jhiusers'
