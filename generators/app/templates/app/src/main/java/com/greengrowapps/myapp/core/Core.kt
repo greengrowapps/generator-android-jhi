@@ -10,7 +10,7 @@ import <%= packageName %>.core.config.CoreConfiguration
 import <%= packageName %>.core.data.firebase_token.FirebaseTokenDto
 import com.greengrowapps.ggarest.listeners.OnObjResponseListener
 import com.greengrowapps.jhiusers.listeners.OnLoginStatusListener
-<% if(pushNotification) { %>
+<% if(pushNotifications) { %>
 import com.google.firebase.iid.FirebaseInstanceId
 <% } %>
 //import-needle
